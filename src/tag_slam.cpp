@@ -175,7 +175,7 @@ namespace tagslam {
     if (hasCompressedImages_) {
       subSyncCompressed_.reset(
         new flex_sync::SubscribingSync<TagArray, CompressedImage, Odometry>(
-          nh_, topics, std::bind(&TagSlam::syncCallbackCompressed, this,
+          nh_, topics, std::bind(&TagSlam::syncCallbackCompressed, this, //绑定普通函数
                                  std::placeholders::_1, std::placeholders::_2,
                                  std::placeholders::_3), 5));
     } else {

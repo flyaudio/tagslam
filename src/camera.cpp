@@ -23,13 +23,14 @@ namespace tagslam {
     cam.imageTopic_ = xml::parse<string>(config, "rostopic");
     cam.tagTopic_   = xml::parse<string>(config, "tagtopic", "");
     cam.rigName_    = xml::parse<string>(config, "rig_body");
-    cam.frameId_    = xml::parse<string>(config, "frameId", cam.name_);
-    double wiggleR  = xml::parse<double>(config, "wiggle_rotation",   0.00001);
-    double wiggleT  = xml::parse<double>(config, "wiggle_translation",0.00001);
+    cam.frameId_    = xml::parse<string>(config, "frameId", cam.name_);//文件里好像没有这一项
+    double wiggleR  = xml::parse<double>(config, "wiggle_rotation",   0.00001);//文件里好像没有这一项
+    double wiggleT  = xml::parse<double>(config, "wiggle_translation",0.00001);//文件里好像没有这一项
     cam.wiggle_    = PoseNoise::make(wiggleR, wiggleT);
     return (camPtr);
   }
 
+//支持多camera ??
   CameraVec
   Camera::parse_cameras(XmlRpc::XmlRpcValue config) {
     CameraVec cdv;

@@ -34,7 +34,7 @@
 
 namespace tagslam {
   class TagSlam: public TagFactory {
-    using Apriltag = apriltag_msgs::Apriltag;
+    using Apriltag = apriltag_msgs::Apriltag; //using;别名
     using TagArray = apriltag_msgs::ApriltagArrayStamped;
     using TagArrayPtr = TagArray::Ptr;
     using TagArrayConstPtr = TagArray::ConstPtr;
@@ -51,7 +51,7 @@ namespace tagslam {
 
   public:
     TagSlam(const ros::NodeHandle &nh);
-    TagSlam(const TagSlam&) = delete;
+    TagSlam(const TagSlam&) = delete;//delete,禁止使用该函数
     TagSlam& operator=(const TagSlam&) = delete;
 
     // inherited from TagFactory

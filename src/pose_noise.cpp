@@ -9,15 +9,15 @@
 
 namespace tagslam {
   // static function
-  PoseNoise PoseNoise::make(const Point3d &a, const Point3d &p) {
+  PoseNoise PoseNoise::make(const Point3d &a, const Point3d &p) {//make成协方差矩阵
     Matrix6d m = Matrix6d::Zero();
     m.diagonal() << a(0)*a(0),a(1)*a(1),a(2)*a(2),p(0)*p(0),p(1)*p(1),
       p(2)*p(2);
-    return (PoseNoise(m, true));
+    return (PoseNoise(m, true));//return 构造一个PoseNoise
   }
 
   // static function
-  PoseNoise PoseNoise::make(double a, double p) {
+  PoseNoise PoseNoise::make(double a, double p) {//make成3维的point
     return (make(Point3d(a, a, a), Point3d(p, p, p)));
   }
  

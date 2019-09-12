@@ -22,6 +22,7 @@ namespace tagslam {
     {"equidistant", EQUIDISTANT}, {"equi", EQUIDISTANT},
     {"fisheye", EQUIDISTANT}};
 
+//model转换成string,便于打印
   static std::string model_to_string(DistortionModel m) {
     for (const auto &dm: distMap) {
       if (dm.second == m) {
@@ -30,13 +31,14 @@ namespace tagslam {
     }
     return ("INVALID");
   }
-  
+
+  //解析camera yml文件
   CameraIntrinsics
   CameraIntrinsics::parse_no_error(XmlRpc::XmlRpcValue config) {
     CameraIntrinsics ci;
     ci.cameraModel_= xml::parse<string>(config, "camera_model");
     const string distModel = xml::parse<string>(config, "distortion_model");
-    if (distMap.count(distModel) == 0) {
+    if (distMap.count(distModel) == 0) {//返回被查找元素的个数.如果有,1;否则,0
       BOMB_OUT("unknown distortion model: " << distModel);
     }
     ci.distortionModel_ = distMap[distModel];
@@ -55,9 +57,10 @@ namespace tagslam {
     for (unsigned int i = 0; i < D.size(); i++) {
       ci.cvD_.at<double>(i) = D[i];
     }
-    return (ci);
+    return (ci);//浅copy??
   }
 
+//考虑exception
   CameraIntrinsics
   CameraIntrinsics::parse(XmlRpc::XmlRpcValue config) {
     try {

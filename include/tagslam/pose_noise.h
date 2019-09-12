@@ -13,8 +13,8 @@ namespace tagslam {
   public:
     typedef Eigen::Matrix<double, 6, 6> Matrix6d;
     typedef Eigen::Matrix<double, 6, 1> Vector6d;
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    PoseNoise(const Matrix6d &n = Matrix6d::Identity(),
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW // ??
+    PoseNoise(const Matrix6d &n = Matrix6d::Identity(), // constructor
                bool isDiag = false) :
       noise_(n), isDiagonal_(isDiag) {
     };

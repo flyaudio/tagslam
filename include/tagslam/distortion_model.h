@@ -4,5 +4,5 @@
 #pragma once
 
 namespace tagslam {
-  typedef enum { RADTAN, EQUIDISTANT, NUM_MODELS } DistortionModel;
+  typedef enum { RADTAN, EQUIDISTANT, NUM_MODELS } DistortionModel;// NUM_MODELS ??
 }
