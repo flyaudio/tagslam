@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     if (node.runOnline()) {
       node.subscribe();
       ros::spin();
-    } else {
+    } else { //rosbag
       try {
         node.run();
         node.finalize();
@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
         return (-1);
       }
       bool exitWhenDone;
-      pnh.param<bool>("exit_when_done", exitWhenDone, false);
+      pnh.param<bool>("exit_when_done", exitWhenDone, false);//获取"exit_when_done"参数的value,给exitWhenDone,默认false
       if (!exitWhenDone) {
         ros::spin(); // wait for potential replay service call
       }

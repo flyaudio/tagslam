@@ -100,11 +100,12 @@ namespace tagslam {
   }
 
   TagPtr Body::findTag(int tagId, int bits) const {
-    const auto it = tags_.find(tagId);
+    const auto it = tags_.find(tagId);//find,被查找元素的位置
     return ((it == tags_.end() || it->second->getBits() != bits)?
             NULL: it->second);
   }
 
+//维护map & list
   void Body::addTag(const TagPtr &tag) {
     tags_.insert(TagMap::value_type(tag->getId(), tag));
     tagList_.push_back(tag);

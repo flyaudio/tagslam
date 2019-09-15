@@ -31,7 +31,7 @@
 #include <iomanip>
 #include <cmath>
 
-const int QSZ = 1000;
+const int QSZ = 1000;//queue size
 
 namespace tagslam {
   using Odometry = nav_msgs::Odometry;
@@ -99,8 +99,9 @@ namespace tagslam {
     }
   }
 
+//read ros参数服务器的param
   void TagSlam::readParams() {
-    nh_.param<string>("outbag", outBagName_, "out.bag");
+    nh_.param<string>("outbag", outBagName_, "out.bag");//获取"outbag"的value,写入outBagName_,默认值"out.bag"
     nh_.param<double>("playback_rate", playbackRate_, 5.0);
     nh_.param<string>("output_directory", outDir_, ".");
     nh_.param<string>("bag_file", inBagFile_, "");
@@ -128,7 +129,7 @@ namespace tagslam {
     testForOldLaunchParameters();
     readParams();
     XmlRpc::XmlRpcValue config, camConfig, camPoses;
-    nh_.getParam("tagslam_config", config);
+    nh_.getParam("tagslam_config", config);//获取参数"tagslam_config"的value,写入到config
     graphUpdater_.parse(config);
     const auto ommi = optModeMap.find(graphUpdater_.getOptimizerMode());
     if (ommi == optModeMap.end()) {
@@ -142,9 +143,9 @@ namespace tagslam {
     readRemap(config);
     readBodies(config);
     readGlobalParameters(config);
-    nh_.getParam("cameras", camConfig);
+    nh_.getParam("cameras", camConfig);//获取参数"cameras"的value,写入到camConfig
     readCameras(camConfig);
-    nh_.getParam("camera_poses", camPoses);
+    nh_.getParam("camera_poses", camPoses);//获取参数"camera_poses"的value,写入到camPoses
     readCameraPoses(camPoses);
     measurements_ = measurements::read_all(config, this);
     // apply measurements
@@ -170,6 +171,7 @@ namespace tagslam {
     return (true);
   }
 
+//sync & subscribe topics
   void TagSlam::subscribe() {
     std::vector<std::vector<std::string>> topics = makeTopics();
     if (hasCompressedImages_) {
@@ -198,7 +200,7 @@ namespace tagslam {
       ROS_WARN_STREAM("No mixing of large and small noise, right???");
       throw (e);
     }
-    std::cout.flush();
+    std::cout.flush(); //将缓冲区的内容马上送进cout
   }
 
   void TagSlam::doDump(bool optimize) {
@@ -341,8 +343,8 @@ namespace tagslam {
     if (config.getType() == XmlRpc::XmlRpcValue::TypeInvalid) {
       BOMB_OUT("no camera configurations found!");
     }
-    cameras_ = Camera::parse_cameras(config);
-    ROS_INFO_STREAM("found " << cameras_.size() << " cameras");
+    cameras_ = Camera::parse_cameras(config);//解析多个camera参数
+    ROS_INFO_STREAM("found " << cameras_.size() << " cameras");//vector的size
     for (auto &cam: cameras_) {
       for (const auto &body: bodies_) {
         if (body->getName() == cam->getRigName()) {
@@ -355,11 +357,12 @@ namespace tagslam {
     }
   }
 
+//change to OpenCV type
   template <typename T>
   static void process_images(const std::vector<T> &msgvec,
                              std::vector<cv::Mat> *images) {
     images->clear();
-    for (const auto i: irange(0ul, msgvec.size())) {
+    for (const auto i: irange(0ul, msgvec.size())) {//遍历vector
       const auto &img = msgvec[i];
       cv::Mat im =
         cv_bridge::toCvCopy(img,sensor_msgs::image_encodings::BGR8)->image;
@@ -367,25 +370,26 @@ namespace tagslam {
     }
   }
 
+//empty ??
   void TagSlam::testIfInBag(
-    rosbag::Bag *bag, const std::vector<std::vector<string>> &topics) const {
+    rosbag::Bag *bag, const std::vector<std::vector<string>> &topics) const { //const指明了这个函数不会修改该类的任何成员数据的值
   }
 
   std::vector<std::vector<std::string>>
   TagSlam::makeTopics() const {
     std::vector<std::vector<string>> topics(3);
     for (const auto &body: bodies_) {
-      if (!body->getOdomTopic().empty()) {
+      if (!body->getOdomTopic().empty()) { //not empty
         topics[2].push_back(body->getOdomTopic());
       }
     }
     for (const auto &cam: cameras_) {
-      if (cam->getTagTopic().empty()) {
+      if (cam->getTagTopic().empty()) { //empty
         BOMB_OUT("camera " << cam->getName() << " no tag topic!");
       }
       topics[0].push_back(cam->getTagTopic());
       if (writeDebugImages_) {
-        if (cam->getImageTopic().empty()) {
+        if (cam->getImageTopic().empty()) { //empty
           BOMB_OUT("camera " << cam->getName() << " no image topic!");
         }
         topics[1].push_back(cam->getImageTopic());
@@ -528,7 +532,7 @@ namespace tagslam {
     testIfInBag(&bag, topics);
     std::vector<string> flatTopics;
     for (const auto &v: topics) {
-      flatTopics.insert(flatTopics.begin(), v.begin(), v.end());
+      flatTopics.insert(flatTopics.begin(), v.begin(), v.end());//将topic展开
     }
     double deltaStartTime{0};
     nh_.param<double>("bag_start_time", deltaStartTime, 0.0);
@@ -594,7 +598,7 @@ namespace tagslam {
     odom.header.stamp = t;
     odom.header.frame_id = fixed_frame;
     odom.child_frame_id = child_frame;
-    tf::poseEigenToMsg(pose, odom.pose.pose);
+    tf::poseEigenToMsg(pose, odom.pose.pose);//eigen to ros
     return (odom);
   }
 

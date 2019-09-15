@@ -24,7 +24,7 @@ namespace tagslam {
   static const PoseNoise::Matrix6d sqrt_info_to_sigma(
     const PoseNoise::Matrix6d &R) {
     // TODO: test this! Is it working at all???
-    const PoseNoise::Matrix6d rsqi = (R.transpose() * R).inverse();
+    const PoseNoise::Matrix6d rsqi = (R.transpose() * R).inverse();//why inverse ??
     return (rsqi);
   }
 

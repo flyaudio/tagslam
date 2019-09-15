@@ -50,7 +50,7 @@ namespace tagslam {
     typedef flex_sync::SubscribingSync<TagArray, Image, Odometry> SubSync;
 
   public:
-    TagSlam(const ros::NodeHandle &nh);
+    TagSlam(const ros::NodeHandle &nh); //constructor
     TagSlam(const TagSlam&) = delete;//delete,禁止使用该函数
     TagSlam& operator=(const TagSlam&) = delete;
 
@@ -61,7 +61,7 @@ namespace tagslam {
     void run();
     void finalize(bool optimize = true);
     void subscribe();
-    bool runOnline() const { return (inBagFile_.empty()); }
+    bool runOnline() const { return (inBagFile_.empty()); }//no rosbag,then,run online
 
     template<typename T1, typename T2, typename T3>
     void processBag(rosbag::View *view,

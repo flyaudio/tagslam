@@ -15,7 +15,7 @@ namespace tagslam {
   class Body {
     using string = std::string;
   public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW //这个宏在new一个对象时会总是返回一个对齐的指针
 
     typedef std::shared_ptr<Body>            BodyPtr;
     typedef std::shared_ptr<const Body>      BodyConstPtr;

@@ -23,7 +23,7 @@ namespace tagslam {
   using boost::irange;
   using std::string;
 
-  Graph::Graph() {
+  Graph::Graph() {//constructor
     optimizer_.reset(new GTSAMOptimizer());
   }
 
