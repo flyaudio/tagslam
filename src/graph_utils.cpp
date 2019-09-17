@@ -26,10 +26,11 @@ namespace tagslam {
     };
 
     void plot(const string &fname, const Graph *g) {
-      std::ofstream ofile(fname);
-      boost::write_graphviz(ofile, g->getBoostGraph(), LabelWriter(g));
+      std::ofstream ofile(fname);//保存在/root/.ros/graph.dot
+      boost::write_graphviz(ofile, g->getBoostGraph(), LabelWriter(g));// Graphviz的格式
     }
-    
+
+//not in use
     void plot_debug(const ros::Time &t, const string &tag, const Graph &g) {
       std::stringstream ss;
       ss << tag << "_" <<  t.toNSec() << ".dot";

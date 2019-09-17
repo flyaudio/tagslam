@@ -156,9 +156,9 @@ namespace tagslam {
     if (!runOnline()) {
       clockPub_ = nh_.advertise<rosgraph_msgs::Clock>("/clock", QSZ);
     }
-    replayService_ = nh_.advertiseService("replay", &TagSlam::replay, this);
-    dumpService_ = nh_.advertiseService("dump", &TagSlam::dump, this);
-    plotService_ = nh_.advertiseService("plot", &TagSlam::plot, this);
+    replayService_ = nh_.advertiseService("replay", &TagSlam::replay, this);//replay service
+    dumpService_ = nh_.advertiseService("dump", &TagSlam::dump, this);//dump service 
+    plotService_ = nh_.advertiseService("plot", &TagSlam::plot, this);//生成graph.dot
     if (publishAck_) {
       ackPub_	 = nh_.advertise<std_msgs::Header>("acknowledge", 1);
     }
@@ -404,13 +404,17 @@ namespace tagslam {
   bool TagSlam::plot(std_srvs::Trigger::Request& req,
                      std_srvs::Trigger::Response &res) {
     ROS_INFO_STREAM("plotting!");
-    graph_utils::plot("graph.dot", graph_.get());
+    graph_utils::plot("graph.dot", graph_.get());// Graphviz的格式画下图
     res.message = "dump complete!";
     res.success = true;
     ROS_INFO_STREAM("finished dumping.");
     return (true);
   }
- 
+
+/*
+replay sevice的回调函数	
+replays all odometry and transform messages at fixed rate (configurable via parameter “playback_rate”)
+*/
   bool TagSlam::replay(std_srvs::Trigger::Request& req,
                        std_srvs::Trigger::Response &res) {
     ROS_INFO_STREAM("replaying!");
@@ -420,7 +424,11 @@ namespace tagslam {
     ROS_INFO_STREAM("finished replaying " << times_.size() << " frames");
     return (true);
   }
-  
+
+/*
+dump sevice的回调函数		
+causes TagSLAM to write all output files to ~/.ros/
+*/
   bool TagSlam::dump(std_srvs::Trigger::Request& req,
                      std_srvs::Trigger::Response &res) {
     ROS_INFO_STREAM("dumping!");
@@ -821,7 +829,8 @@ namespace tagslam {
     }
     return (it->second);
   }
-  
+
+//camera_poses.yaml
   void TagSlam::writeCameraPoses(const string &fname) const {
     std::ofstream f(fname);
     for (const auto &cam : cameras_) {
@@ -840,6 +849,7 @@ namespace tagslam {
     }
   }
 
+//calibration.yaml
   void TagSlam::writeFullCalibration(const string &fname) const {
     std::ofstream f(fname);
     for (const auto &cam : cameras_) {
@@ -856,6 +866,7 @@ namespace tagslam {
     }
   }
 
+//poses.yaml
   void TagSlam::writePoses(const string &fname) const {
     std::ofstream f(fname);
     f << "bodies:" << std::endl;
@@ -897,6 +908,7 @@ namespace tagslam {
     }
   }
 
+//  time_diagnostics.txt
   void TagSlam::writeTimeDiagnostics(const string &fname) const {
     std::ofstream f(fname);
     const Graph::TimeToErrorMap m = graph_->getTimeToErrorMap();
@@ -914,6 +926,7 @@ namespace tagslam {
     }
   }
 
+//error_map.txt
   void TagSlam::writeErrorMap(const string &fname) const {
     std::ofstream f(fname);
     const auto errMap = graph_->getErrorMap();
@@ -925,6 +938,7 @@ namespace tagslam {
     }
   }
 
+//tag_diagnostics.txt
   void TagSlam::writeTagDiagnostics(const string &fname) const {
     std::ofstream f(fname);
     const std::string idn = "       ";
@@ -1130,7 +1144,8 @@ namespace tagslam {
       }
     }
   }
-  
+
+//write tag_corners.txt  
   void
   TagSlam::writeTagCorners(const ros::Time &t, int camIdx,
                             const TagConstPtr &tag,

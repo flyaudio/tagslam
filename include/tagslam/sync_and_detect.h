@@ -27,6 +27,10 @@ namespace tagslam {
   using OdometryConstPtr = nav_msgs::OdometryConstPtr;
   using ImageTransport = image_transport::ImageTransport;
   typedef flex_sync::Sync<Image, Odometry> ImageOdometrySync;
+/*
+  a tool to extract tags and write them to a new bag;
+  synchronizes the detections that come from multiple cameras
+*/
 
   class SyncAndDetect {
   public:
