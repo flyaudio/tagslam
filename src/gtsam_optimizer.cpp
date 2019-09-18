@@ -134,9 +134,9 @@ namespace tagslam {
   }
 
   ValueKey GTSAMOptimizer::addPose(const Transform &p) {
-    ValueKey key = generateKey();
+    ValueKey key = generateKey();//自累加
     //ROS_DEBUG_STREAM("optimizer: adding pose with key " << key);
-    newValues_.insert(key, gtsam_utils::to_gtsam(p));
+    newValues_.insert(key, gtsam_utils::to_gtsam(p));//添加初始值
     return (key);
   }
 
@@ -411,13 +411,13 @@ namespace tagslam {
     fullGraph_ += newGraph_;
     values_.insert(newValues_);
 
-    gtsam::LevenbergMarquardtParams lmp;
+    gtsam::LevenbergMarquardtParams lmp;//使用 LM 优化
     lmp.setVerbosity(verbosity_);
     lmp.setMaxIterations(100);
     lmp.setAbsoluteErrorTol(1e-7);
     lmp.setRelativeErrorTol(0);
     gtsam::LevenbergMarquardtOptimizer lmo(fullGraph_, values_, lmp);
-    values_ = lmo.optimize();
+    values_ = lmo.optimize();//Optimization complete
     lastError_ = lmo.error();
 #ifdef DEBUG_BEFORE_AFTER   
     for (const auto &v : newValues_) {
