@@ -13,7 +13,7 @@ namespace tagslam {
   bool Board::parse(XmlRpc::XmlRpcValue body, const BodyPtr &bp) {
     try {
       const XmlRpc::XmlRpcValue board = body[type_];
-      tagStartId_ = xml::parse<int>(board, "tag_start_id");
+      tagStartId_ = xml::parse<int>(board, "tag_start_id");//要指定start id
       tagSize_    = xml::parse<double>(board, "tag_size");
       tagSpacing_ = xml::parse<double>(board, "tag_spacing");
       tagRows_    = xml::parse<int>(board, "tag_rows");
@@ -33,7 +33,7 @@ namespace tagslam {
         const PoseNoise noise =
           PoseNoise::make(tagRotationNoise_, tagPositionNoise_);
         const PoseWithNoise pn(pose, noise, true);
-        addTag(Tag::make(tagid++, tagBits_, tagSize_, pn, bp));
+        addTag(Tag::make(tagid++, tagBits_, tagSize_, pn, bp));//tag id 是累加的??
       }
     }
     return (true);

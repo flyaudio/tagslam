@@ -82,7 +82,7 @@ namespace tagslam {
   };
  
   TagSlam::TagSlam(const ros::NodeHandle &nh) : nh_(nh) {
-    initialGraph_.reset(new Graph());
+    initialGraph_.reset(new Graph());//initialGraph_ 托管一个新的Graph
     // Alias the graph to the initial graph. That way during startup,
     // all updates that are done on graph_, are also done on the initial
     // graph

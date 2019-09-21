@@ -52,6 +52,7 @@ namespace tagslam {
     return (isam2);
   }
 
+// constructor
   GTSAMOptimizer::GTSAMOptimizer() {
     verbosity_ = "SILENT";
     isam2_ = make_isam2(mode_);
@@ -60,6 +61,7 @@ namespace tagslam {
   GTSAMOptimizer::~GTSAMOptimizer() {
   }
 
+//why ??
   Optimizer* GTSAMOptimizer::clone() const {
     GTSAMOptimizer *o = new GTSAMOptimizer(*this);
     o->isam2_.reset(new gtsam::ISAM2(*isam2_));

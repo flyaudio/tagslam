@@ -6,7 +6,7 @@
 
 #include "tagslam/tag.h"
 namespace tagslam {
-  class TagFactory {
+  class TagFactory {//这个factory模式好像没啥用??
   public:
     virtual ~TagFactory() {};
     virtual TagConstPtr findTag(int tagId) = 0;
