@@ -42,11 +42,12 @@ namespace tagslam {
   using CompressedImageConstPtr = sensor_msgs::CompressedImageConstPtr;
   using boost::irange;
   using std::string;
-  using std::setw;
-  using std::fixed;
-  using std::setprecision;
-#define FMT(X, Y) fixed << setw(X) << setprecision(Y)
+  using std::setw;//需要填充多少个字符,默认填充的字符为' '空格
+  using std::fixed;//表示用一般的方式输出浮点数
+  using std::setprecision;//设置精度为
+#define FMT(X, Y) fixed << setw(X) << setprecision(Y)//设置精度为Y
 
+//eigen to tf
   static tf::Transform to_tftf(const Transform &tf) {
     tf::Transform ttf;
     tf::transformEigenToTF(tf, ttf);
@@ -100,6 +101,7 @@ namespace tagslam {
   }
 
 //read ros参数服务器的param
+//param in tagslam.launch
   void TagSlam::readParams() {
     nh_.param<string>("outbag", outBagName_, "out.bag");//获取"outbag"的value,写入outBagName_,默认值"out.bag"
     nh_.param<double>("playback_rate", playbackRate_, 5.0);
@@ -143,8 +145,12 @@ namespace tagslam {
     readRemap(config);
     readBodies(config);
     readGlobalParameters(config);
+	
+	//cameras.yaml parameter
     nh_.getParam("cameras", camConfig);//获取参数"cameras"的value,写入到camConfig
     readCameras(camConfig);
+	
+	//camera_poses.yaml parameter
     nh_.getParam("camera_poses", camPoses);//获取参数"camera_poses"的value,写入到camPoses
     readCameraPoses(camPoses);
     measurements_ = measurements::read_all(config, this);
@@ -258,11 +264,11 @@ namespace tagslam {
   }
 
   void TagSlam::readBodies(XmlRpc::XmlRpcValue config) {
-    // read body defaults first in case
+    // read "body_defaults" first in case
     // bodies do not provide all parameters
     BodyDefaults::parse(config);
 
-    // now read bodies
+    // now read "bodies"
     bodies_ = Body::parse_bodies(config);
     for (const auto &body: bodies_) {
       graph_utils::add_body(graph_.get(), *body);
@@ -552,15 +558,17 @@ causes TagSLAM to write all output files to ~/.ros/
     rosbag::View view(bag, rosbag::TopicQuery(flatTopics), startTime);
     ros::WallTime t0 = ros::WallTime::now();
     if (hasCompressedImages_) {
+	//why std::function,why not直接调用syncCallbackCompressed??
       std::function<void(const std::vector<TagArray::ConstPtr> &,
                          const std::vector<CompressedImage::ConstPtr> &,
                          const std::vector<Odometry::ConstPtr> &)> cb =
         std::bind(&TagSlam::syncCallbackCompressed, this,
                   std::placeholders::_1, std::placeholders::_2,
                   std::placeholders::_3);
-      processBag<TagArray, CompressedImage, Odometry>(
+      processBag<TagArray, CompressedImage, Odometry>(//模板函数的变量
         &view, topics, cb);
     } else {
+	//why std::function,why not直接调用syncCallback??
       std::function<void(const std::vector<TagArray::ConstPtr> &,
                          const std::vector<Image::ConstPtr> &,
                          const std::vector<Odometry::ConstPtr> &)> cb =

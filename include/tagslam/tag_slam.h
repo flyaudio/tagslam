@@ -63,6 +63,7 @@ namespace tagslam {
     void subscribe();
     bool runOnline() const { return (inBagFile_.empty()); }//no rosbag,then,run online
 
+//挑选同步的3个msg 给callback函数调用
     template<typename T1, typename T2, typename T3>
     void processBag(rosbag::View *view,
                     const std::vector<std::vector<string>> &topics,
@@ -71,12 +72,12 @@ namespace tagslam {
                       const std::vector<typename T2::ConstPtr> &,
                       const std::vector<typename T3::ConstPtr> &)> &cb) {
       flex_sync::Sync<T1, T2, T3> sync(topics, cb, syncQueueSize_);
-      for (const rosbag::MessageInstance &m: *view) {
-         typename T1::ConstPtr t1 = m.instantiate<T1>();
+      for (const rosbag::MessageInstance &m: *view) {//遍历view里的每一帧
+         typename T1::ConstPtr t1 = m.instantiate<T1>();//T1类型msg
         if (t1) {    sync.process(m.getTopic(), t1); } else {
-          typename T2::ConstPtr t2 = m.instantiate<T2>();
+          typename T2::ConstPtr t2 = m.instantiate<T2>();//T2类型msg
           if (t2) {  sync.process(m.getTopic(), t2); } else {
-            typename T3::ConstPtr t3 =m.instantiate<T3>();
+            typename T3::ConstPtr t3 =m.instantiate<T3>();//T3类型msg
             if (t3) { sync.process(m.getTopic(), t3); }
           }
         }

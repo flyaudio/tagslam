@@ -38,6 +38,7 @@ namespace tagslam {
       me.lastTime = now;
       return (usec.count());
     }
+	//Profiler类重载运算符<<
     friend std::ostream &operator<<(std::ostream& os, const Profiler &p);
   private:
     struct PTimer {
@@ -58,5 +59,5 @@ namespace tagslam {
     typedef boost::unordered_map<const char *, MapEntry> ProfilerMap;
     ProfilerMap 	map_;
   };
-  std::ostream &operator<<(std::ostream& os, const Profiler &p);
+  std::ostream &operator<<(std::ostream& os, const Profiler &p);//重载操作符<<;不属于类Profiler
 }
