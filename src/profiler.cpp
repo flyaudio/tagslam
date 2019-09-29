@@ -47,18 +47,20 @@ namespace tagslam {
     return os;
   }
 
+//constructor
   Profiler::PTimer::PTimer(const Duration &d, const PTimer &oldTimer, int ncount) {
     duration = oldTimer.duration + d;
-    sqduration = oldTimer.sqduration + (int64_t)(d.count() * d.count()) / (int64_t) ncount;
+    sqduration = oldTimer.sqduration + (int64_t)(d.count() * d.count()) / (int64_t) ncount;//why square ??
     Duration dn = d / ncount;
     min = (dn <  oldTimer.min) ? dn : oldTimer.min;
     max = (dn >  oldTimer.max) ? dn : oldTimer.max;
     count = oldTimer.count + ncount;
   }
 
+//constructor
   Profiler::PTimer::PTimer() :
     duration(0), sqduration(0),
-    min(std::numeric_limits<int64_t>::max()),
+    min(std::numeric_limits<int64_t>::max()),//是函数，返回编译器允许的 int64_t 型数 最大值
     max(std::numeric_limits<int64_t>::min()), count(0) {
   }
 

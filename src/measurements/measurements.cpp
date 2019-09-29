@@ -18,13 +18,13 @@ namespace tagslam {
       std::vector<MeasurementsPtr> meas;
       MeasurementsPtr m;
 
-      m = measurements::Distance::read(config, tagFactory);
+      m = measurements::Distance::read(config, tagFactory);//distance measurement(两点之间的距离)
       if (m) { meas.push_back(m); }
       
-      m = measurements::Coordinate::read(config, tagFactory);
+      m = measurements::Coordinate::read(config, tagFactory);//coordinate measurement
       if (m) { meas.push_back(m); }
 
-      m = measurements::Plane::read(config, tagFactory);
+      m = measurements::Plane::read(config, tagFactory);//plane measurement(共面)
       if (m) { meas.push_back(m); }
     
       return (meas);

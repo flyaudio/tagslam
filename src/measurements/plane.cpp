@@ -51,7 +51,7 @@ namespace tagslam {
 
     Plane::PlaneMeasurementsPtr
     Plane::read(XmlRpc::XmlRpcValue config, TagFactory *tagFactory) {
-      if (!config.hasMember("plane_measurements")) {
+      if (!config.hasMember("plane_measurements")) {//key word
         ROS_INFO_STREAM("no plane measurements found!");
         return PlaneMeasurementsPtr();
       }

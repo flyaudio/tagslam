@@ -33,7 +33,7 @@ namespace tagslam {
 
     Distance::DistanceMeasurementsPtr
     Distance::read(XmlRpc::XmlRpcValue config, TagFactory *tagFactory) {
-      if (!config.hasMember("distance_measurements")) {
+      if (!config.hasMember("distance_measurements")) {//key word in tagslam.yaml
         ROS_INFO_STREAM("no distance measurements found!");
         return DistanceMeasurementsPtr();
       }
@@ -42,7 +42,7 @@ namespace tagslam {
       XmlRpc::XmlRpcValue meas = config[std::string("distance_measurements")];
       if (meas.getType() == XmlRpc::XmlRpcValue::TypeArray) {
         auto factors = factor::Distance::parse(meas, tagFactory);
-        for (const auto f: factors) {
+        for (const auto f: factors) {//遍历,添加每一个factor
           if (!f->getTag(0)->getBody()->isStatic()
               || !f->getTag(1)->getBody()->isStatic()) {
             BOMB_OUT("measured bodies must be static: " << *f);

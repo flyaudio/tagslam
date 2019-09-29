@@ -34,7 +34,7 @@ namespace tagslam {
     Coordinate::CoordinateMeasurementsPtr
     Coordinate::read(XmlRpc::XmlRpcValue config,
                      TagFactory *tagFactory) {
-      if (!config.hasMember("coordinate_measurements")) {
+      if (!config.hasMember("coordinate_measurements")) {//key word in tagslam.yaml
         ROS_INFO_STREAM("no coordinate measurements found!");
         return CoordinateMeasurementsPtr();
       }

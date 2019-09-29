@@ -11,18 +11,18 @@
 namespace tagslam {
   class Profiler {
   public:
-    typedef boost::chrono::high_resolution_clock::time_point TimePoint;
-    typedef boost::chrono::duration<long long, boost::micro> Duration;
+    typedef boost::chrono::high_resolution_clock::time_point TimePoint;//时刻
+    typedef boost::chrono::duration<long long, boost::micro> Duration;//<数值,时间单位>;microseconds
     Profiler() {};
     virtual ~Profiler() {};
 
     void reset(const char *label) {
       const auto t = boost::chrono::high_resolution_clock::now();
       ProfilerMap::iterator i = map_.find(label);
-      if (i == map_.end()) {
-        map_[label] = MapEntry(PTimer(), t);
-      } else {
-        i->second.lastTime = t;
+      if (i == map_.end()) {                 //找不到
+        map_[label] = MapEntry(PTimer(), t);//新建
+      } else {                              //找到
+        i->second.lastTime = t;             //time update
       }
     }
     int record(const char *label, int ncount = 1) {
@@ -35,7 +35,7 @@ namespace tagslam {
       const TimePoint now =	boost::chrono::high_resolution_clock::now();
       const Duration usec =	boost::chrono::duration_cast<Duration>(now - me.lastTime);
       me.timer = PTimer(usec, me.timer, ncount);
-      me.lastTime = now;
+      me.lastTime = now;//time update
       return (usec.count());
     }
 	//Profiler类重载运算符<<

@@ -669,12 +669,12 @@ namespace tagslam {
   }
 
   void GraphUpdater::parse(XmlRpc::XmlRpcValue config) {
-    if (!config.hasMember("tagslam_parameters")) {
+    if (!config.hasMember("tagslam_parameters")) {//key word in tagslam.yaml
       BOMB_OUT("tagslam config file must have tagslam_parameters!");
     }
     XmlRpc::XmlRpcValue cfg = config["tagslam_parameters"];
     try {
-      pixelNoise_ = xml::parse<double>(cfg, "pixel_noise", 1.0);
+      pixelNoise_ = xml::parse<double>(cfg, "pixel_noise", 1.0);//default 1.0 pixel 
       minimumViewingAngle_ =
         xml::parse<double>(cfg, "minimum_viewing_angle", 20.0);
       maxSubgraphError_ = xml::parse<double>(cfg, "max_subgraph_error", 50.0);
