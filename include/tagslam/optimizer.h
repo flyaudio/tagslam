@@ -19,11 +19,11 @@ namespace tagslam {
     };
   };
   typedef std::map<FactorKey, double> KeyToErrorMap;
-  class Optimizer {
+  class Optimizer {//全是虚函数
   public:
     using string = std::string;
     Optimizer() {}
-    virtual ~Optimizer() {};
+    virtual ~Optimizer() {};//基类中的析构函数必须为虚函数，否则会出现对象释放错误
 
     virtual double optimize(double deltaError) = 0;
     virtual double optimizeFull(bool force = false) = 0;
