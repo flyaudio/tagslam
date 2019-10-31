@@ -2,8 +2,14 @@ mehdi's base version is :
 tagslam-98e56eb0e1dc379cd43aa2359dca6e3ab4e81ab4
 
 
-class GTSAMOptimizer: public Optimizer
 
+class Graph
+class GraphUpdater
+
+class GTSAMOptimizer: public Optimizer
+class Board: public Body 
+class TagSlam: public TagFactory 
+class Sync<T1>: public SyncBase 
 
 
 class TagProjection:     public Factor 
@@ -26,4 +32,9 @@ class Pose: public Value
     
 struct SimpleBody: public Body 
 
+
+
+
 dukto
+
+

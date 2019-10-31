@@ -42,7 +42,7 @@ namespace tagslam {
   using CompressedImageConstPtr = sensor_msgs::CompressedImageConstPtr;
   using boost::irange;
   using std::string;
-  using std::setw;//需要填充多少个字符,默认填充的字符为' '空格
+  using std::setw;//需要填充N个字符,默认填充的字符为' '空格
   using std::fixed;//表示用一般的方式输出浮点数
   using std::setprecision;//设置精度为
 #define FMT(X, Y) fixed << setw(X) << setprecision(Y)//设置精度为Y
@@ -599,8 +599,8 @@ causes TagSLAM to write all output files to ~/.ros/
     const std::vector<CompressedImageConstPtr> &msgvec2,
     const std::vector<OdometryConstPtr> &msgvec3) {
     profiler_.reset("processCompressedImages");
-    process_images<CompressedImageConstPtr>(msgvec2, &images_);
-    profiler_.record("processCompressedImages");
+    process_images<CompressedImageConstPtr>(msgvec2, &images_);//ROS to OpenCV type
+    profiler_.record("processCompressedImages");//why record 各种时间 ??
     profiler_.reset("processTagsAndOdom");
     processTagsAndOdom(msgvec1, msgvec3);
     profiler_.record("processTagsAndOdom");

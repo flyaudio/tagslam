@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
         return (-1);
       }
       bool exitWhenDone;
-      pnh.param<bool>("exit_when_done", exitWhenDone, false);//获取"exit_when_done"参数的value,给exitWhenDone,默认false
+      pnh.param<bool>("exit_when_done", exitWhenDone, false);//获取"exit_when_done"参数的value,给 exitWhenDone,默认false
       if (!exitWhenDone) {
         ros::spin(); // wait for potential replay service call
       }

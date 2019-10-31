@@ -9,7 +9,7 @@
 #include <boost/unordered_map.hpp>
 
 namespace tagslam {
-  class Profiler {
+  class Profiler {//好像没什么用?? 到底记录什么??
   public:
     typedef boost::chrono::high_resolution_clock::time_point TimePoint;//时刻
     typedef boost::chrono::duration<long long, boost::micro> Duration;//<数值,时间单位>;microseconds
@@ -27,11 +27,11 @@ namespace tagslam {
     }
     int record(const char *label, int ncount = 1) {
       ProfilerMap::iterator i = map_.find(label);
-      if (i == map_.end()) {
+      if (i == map_.end()) {   //找不到
         std::cout << "ERROR: invalid timer: " << label << std::endl;
         throw std::runtime_error("invalid timer!");
       }
-      auto &me = i->second;
+      auto &me = i->second; //MapEntry 类型
       const TimePoint now =	boost::chrono::high_resolution_clock::now();
       const Duration usec =	boost::chrono::duration_cast<Duration>(now - me.lastTime);
       me.timer = PTimer(usec, me.timer, ncount);

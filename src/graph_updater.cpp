@@ -569,7 +569,7 @@ namespace tagslam {
                           ", doing full optimization");
           error = graph->optimizeFull(/*force*/ true);
           ROS_INFO_STREAM("error after full opt: " << error);
-          graph->transferFullOptimization();
+          graph->transferFullOptimization();//optimizeFull 之后都要跟 transferFullOptimization ??
           numIncrementalOpt_ = 0;
         }
         lastIncError_ = error;

@@ -303,7 +303,7 @@ namespace tagslam {
     }
   }
 
-  double GTSAMOptimizer::doOptimize(double deltaError) {
+  double GTSAMOptimizer::doOptimize(double deltaError) {//iSAM 优化
     ROS_DEBUG_STREAM("incremental optimize new values: " << newValues_.size()
                      << " factors: " << newGraph_.size()
                      << " delta: " << deltaError);
@@ -313,7 +313,7 @@ namespace tagslam {
       gtsam::ISAM2Result res = isam2_->update(newGraph_, newValues_);
       double prevErr = *res.errorAfter;
       for (int i = 0; i < maxIter_ - 1; i++) {
-        res = isam2_->update();
+        res = isam2_->update();//why update 这么多次??
         if (!hasValidError) {
           // without nonlinear error calc GTSAM returns garbage
           // so just quit after one iteration
@@ -418,7 +418,7 @@ namespace tagslam {
     lmp.setVerbosity(verbosity_);
     lmp.setMaxIterations(100);
     lmp.setAbsoluteErrorTol(1e-7);
-    lmp.setRelativeErrorTol(0);
+    lmp.setRelativeErrorTol(0);//??
     gtsam::LevenbergMarquardtOptimizer lmo(fullGraph_, values_, lmp);
     values_ = lmo.optimize();//Optimization complete
     lastError_ = lmo.error();
@@ -437,10 +437,10 @@ namespace tagslam {
     return (lastError_);
   }
     
-  PoseNoise GTSAMOptimizer::getMarginal(const ValueKey k)  {
+  PoseNoise GTSAMOptimizer::getMarginal(const ValueKey k)  {//get covariance
     try {
       auto it = covariances_.find(k);
-      if (it == covariances_.end()) {
+      if (it == covariances_.end()) {//if no, then add one
         gtsam::Marginals marginals(fullGraph_, values_);
         it = covariances_.insert(
           std::map<OptimizerKey,
