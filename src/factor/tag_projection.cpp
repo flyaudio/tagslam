@@ -17,7 +17,7 @@ namespace tagslam {
                                  const geometry_msgs::Point *imgCorn,
                                  double pxn,
                                  const string   &name) :
-      Factor(name, t), cam_(cam), tag_(tag), pixelNoise_(pxn) {
+      Factor(name, t), cam_(cam), tag_(tag), pixelNoise_(pxn) {//需要加上基类的constructor
       imgCorners_ <<
         imgCorn[0].x, imgCorn[0].y,  imgCorn[1].x, imgCorn[1].y,
         imgCorn[2].x, imgCorn[2].y,  imgCorn[3].x, imgCorn[3].y;

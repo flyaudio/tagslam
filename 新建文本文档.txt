@@ -6,4 +6,24 @@ class GTSAMOptimizer: public Optimizer
 
 
 
-class TagProjection: public Factor 
+class TagProjection:     public Factor 
+class RelativePosePrior: public Factor
+class Distance:          public Factor 
+class Coordinate:        public Factor 
+class AbsolutePosePrior: public Factor 
+                          class Factor: public Vertex 
+
+
+
+class Coordinate: public Measurements 
+class Distance:   public Measurements 
+class Plane:      public Measurements 
+
+
+class Pose: public Value 
+    class Value: public Vertex 
+    
+    
+struct SimpleBody: public Body 
+
+dukto

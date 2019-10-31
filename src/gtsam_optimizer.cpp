@@ -166,7 +166,7 @@ namespace tagslam {
     Eigen::Vector3d corner1, ValueKey T_w_b1, ValueKey T_b1_o,
     Eigen::Vector3d corner2, ValueKey T_w_b2, ValueKey T_b2_o)
   {
-    gtsam::Expression<gtsam::Pose3>  T_w_b_1(T_w_b1);
+    gtsam::Expression<gtsam::Pose3>  T_w_b_1(T_w_b1);//constant
     gtsam::Expression<gtsam::Pose3>  T_b_o_1(T_b1_o);
     gtsam::Expression<gtsam::Pose3>  T_w_b_2(T_w_b2);
     gtsam::Expression<gtsam::Pose3>  T_b_o_2(T_b2_o);
@@ -178,9 +178,9 @@ namespace tagslam {
     gtsam::Expression<gtsam::Point3> X_w_2 =
       gtsam::transform_from(T_w_b_2, gtsam::transform_from(T_b_o_2, X_o_2));
     gtsam::Expression<double> dist =
-      gtsam::Expression<double>(&distance, X_w_1, X_w_2);
+      gtsam::Expression<double>(&distance, X_w_1, X_w_2);//function
     newGraph_.addExpressionFactor(
-      dist, d, gtsam::noiseModel::Isotropic::Sigma(1, noise));
+      dist, d, gtsam::noiseModel::Isotropic::Sigma(1, noise));//h,z,measurement noisemodel
     return (fullGraph_.size() + newGraph_.size() - 1);
   }
 
@@ -198,7 +198,7 @@ namespace tagslam {
     gtsam::Expression<double> coord = gtsam::Expression<double>(&proj, X_w, n);
     
     newGraph_.addExpressionFactor(
-      coord, len, gtsam::noiseModel::Isotropic::Sigma(1, noise));
+      coord, len, gtsam::noiseModel::Isotropic::Sigma(1, noise));//h,z,measurement noisemodel
     return (fullGraph_.size() + newGraph_.size() - 1);
   }
 
@@ -214,6 +214,7 @@ namespace tagslam {
     //T_w_r << " " << T_w_b << " " << T_b_o);
     std::vector<FactorKey> keys;
     keys.reserve(4);
+    // Expression: class that supports automatic differentiation.
     gtsam::Expression<gtsam::Pose3>  T_b_o_fac(T_b_o);
     gtsam::Expression<gtsam::Pose3>  T_w_b_fac(T_w_b);
     gtsam::Expression<gtsam::Pose3>  T_r_c_fac(T_r_c);
@@ -228,7 +229,7 @@ namespace tagslam {
     for (const auto i: irange(0, 4)) { // iterate over 4 corners
       const gtsam::Point2 imgPoint(imgCorners(i,0), imgCorners(i,1));
       gtsam::Expression<gtsam::Point3> X_o(objCorners.row(i));
-      // transform_from does X_A = T_AB * X_B
+      // transform_from does X_A = T_AB * X_B //what's the different "to" & "from" 
       // transform_to   does X_A = T_BA * X_B
       gtsam::Expression<gtsam::Point2> xp =
         gtsam::project(
@@ -410,7 +411,7 @@ namespace tagslam {
       ROS_INFO_STREAM("graph not updated, no need to optimize!");
       return (lastError_);
     }
-    fullGraph_ += newGraph_;
+    fullGraph_ += newGraph_;//可以直接相加??
     values_.insert(newValues_);
 
     gtsam::LevenbergMarquardtParams lmp;//使用 LM 优化

@@ -12,6 +12,6 @@
 namespace tagslam {
   class Vertex;
   typedef std::shared_ptr<Vertex> GraphVertex;
-  std::ostream &operator<<(std::ostream &os, const GraphVertex &v);
+  std::ostream &operator<<(std::ostream &os, const GraphVertex &v);//重载
 
 }
