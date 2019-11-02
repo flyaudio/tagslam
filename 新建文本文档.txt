@@ -7,7 +7,8 @@ class Graph
 class GraphUpdater
 
 class GTSAMOptimizer: public Optimizer
-class Board: public Body 
+class Board:       public Body 
+struct SimpleBody: public Body 
 class TagSlam: public TagFactory 
 class Sync<T1>: public SyncBase 
 
@@ -18,6 +19,8 @@ class Distance:          public Factor
 class Coordinate:        public Factor 
 class AbsolutePosePrior: public Factor 
                           class Factor: public Vertex 
+                          class Value:  public Vertex 
+class Pose: public Value 
 
 
 
@@ -26,11 +29,8 @@ class Distance:   public Measurements
 class Plane:      public Measurements 
 
 
-class Pose: public Value 
-    class Value: public Vertex 
     
     
-struct SimpleBody: public Body 
 
 
 

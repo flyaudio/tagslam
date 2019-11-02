@@ -82,7 +82,7 @@ namespace tagslam {
     {"fast", FAST}
   };
  
-  TagSlam::TagSlam(const ros::NodeHandle &nh) : nh_(nh) {
+  TagSlam::TagSlam(const ros::NodeHandle &nh) : nh_(nh) {//构造函数
     initialGraph_.reset(new Graph());//initialGraph_ 托管一个新的Graph
     // Alias the graph to the initial graph. That way during startup,
     // all updates that are done on graph_, are also done on the initial
@@ -134,7 +134,7 @@ namespace tagslam {
     nh_.getParam("tagslam_config", config);//获取参数"tagslam_config"的value,写入到config
     graphUpdater_.parse(config);
     const auto ommi = optModeMap.find(graphUpdater_.getOptimizerMode());
-    if (ommi == optModeMap.end()) {
+    if (ommi == optModeMap.end()) {//找不到
       BOMB_OUT("invalid optimizer mode: " << optimizerMode_);
     } else {
       graph_->getOptimizer()->setMode(ommi->second);
@@ -1045,7 +1045,7 @@ causes TagSLAM to write all output files to ~/.ros/
     // Sometimes there are tags with duplicate ids in the data set.
     // In this case, remap the tag ids of the detected tags dependent
     // on time stamp, to something else so they become unique.
-    for (const auto i: irange(0ul, orig.size())) {
+    for (const auto i: irange(0ul, orig.size())) {//多路摄像头
       const string &camName = cameras_[i]->getName();
       const auto it = camSquash_.find(camName);
       const std::set<int> *sqc = (it != camSquash_.end()) ?
@@ -1086,11 +1086,11 @@ causes TagSLAM to write all output files to ~/.ros/
     }
   }
 
-  void TagSlam::readRemap(XmlRpc::XmlRpcValue config) {
+  void TagSlam::readRemap(XmlRpc::XmlRpcValue config) {//parse tagslam.yaml里面的tag_id_remap
     if (!config.hasMember("tag_id_remap")) {
       return;
     }
-    XmlRpc::XmlRpcValue remap = config["tag_id_remap"];
+    XmlRpc::XmlRpcValue remap = config["tag_id_remap"];//读取tag_id_remap标签的内容,可以打印出来看看
     if (remap.getType() == XmlRpc::XmlRpcValue::TypeArray) {
       ROS_INFO_STREAM("found remap map!");
       for (const auto i: irange(0, remap.size())) {
@@ -1127,23 +1127,23 @@ causes TagSLAM to write all output files to ~/.ros/
     }
   }
 
-  void TagSlam::readSquash(XmlRpc::XmlRpcValue config) {
+  void TagSlam::readSquash(XmlRpc::XmlRpcValue config) {//parse tagslam.yaml里面的squash
     if (!config.hasMember("squash")) {
       return;
     }
-    XmlRpc::XmlRpcValue squash = config["squash"];
+    XmlRpc::XmlRpcValue squash = config["squash"];//读取squash标签的内容,可以打印出来看看
     if (squash.getType() == XmlRpc::XmlRpcValue::TypeArray) {
       for (const auto i: irange(0, squash.size())) {
         try {
           auto sq = squash[i];
           const std::set<int> tags =
-            xml::parse_container<std::set<int>>(sq, "tags", std::set<int>());
+            xml::parse_container<std::set<int>>(sq, "tags", std::set<int>());//'tags'对应的值
           // try to parse as time squash
-          const ros::Time t = xml::parse<ros::Time>(sq, "time", ros::Time(0));
+          const ros::Time t = xml::parse<ros::Time>(sq, "time", ros::Time(0));//'time'对应的值
           if (t != ros::Time(0)) {
             squash_[t] = tags;
           } else {
-            const string cam = xml::parse<std::string>(sq, "camera");
+            const string cam = xml::parse<std::string>(sq, "camera");//'camera'对应的值;一般为空
             camSquash_[cam] = tags;
           }
         } catch (const XmlRpc::XmlRpcException &e) {

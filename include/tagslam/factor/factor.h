@@ -15,7 +15,7 @@ namespace tagslam {
     class Factor: public Vertex {
     public:
       Factor(const string &s = "", const ros::Time &t = ros::Time(0)):
-        Vertex(s, "box", t) {}//初始化基类Vertex
+        Vertex(s, "box", t) {}//construcor里初始化基类Vertex
       virtual ~Factor() {}
       virtual void addToOptimizer(Graph *g) const = 0;
       virtual bool establishesValues() const = 0;

@@ -174,10 +174,10 @@ namespace tagslam {
     GraphPtr             graph_;
     GraphPtr             initialGraph_;
     GraphUpdater         graphUpdater_;
-    CameraVec            cameras_;
-    BodyVec              bodies_;
-    BodyVec              nonstaticBodies_;
-    BodyPtr              defaultBody_;
+    CameraVec            cameras_;        //initialize时,从cameras.yaml读入的camera参数
+    BodyVec              bodies_;         //initialize时,从tagslam.yaml读入的bodies参数
+    BodyVec              nonstaticBodies_;//initialize时,从tagslam.yaml读入的is_static 参数
+    BodyPtr              defaultBody_;    //initialize时,从tagslam.yaml读入的default_body
     ros::Publisher       clockPub_;
     ros::Publisher       ackPub_;
     std::vector<ros::Publisher> odomPub_;
@@ -193,14 +193,14 @@ namespace tagslam {
     int                  syncQueueSize_{100};
     double               playbackRate_{1.0};
     double               pixelNoise_{1.0};
-    std::vector<cv::Mat> images_;
+    std::vector<cv::Mat> images_;//ROS to Mat类型后,好像就没有再使用了??
     std::vector<OdometryProcessor> odomProcessors_;
     tf::TransformBroadcaster tfBroadcaster_;
     ros::ServiceServer   plotService_;
     ros::ServiceServer   replayService_;
     ros::ServiceServer   dumpService_;
     TagMap               tagMap_;
-    Profiler             profiler_;
+    Profiler             profiler_;//没搞明白是有什么用??
     std::list<ros::Time> times_;
     rosbag::Bag          outBag_;
     std::ofstream        tagCornerFile_;
@@ -212,9 +212,9 @@ namespace tagslam {
     std::shared_ptr<SubSyncCompressed> subSyncCompressed_;
     std::shared_ptr<SubSync> subSync_;
     
-    std::unordered_map<int, std::vector<ReMap>>  tagRemap_;
-    std::map<ros::Time, std::set<int>> squash_;
-    std::map<std::string, std::set<int>> camSquash_;
-    std::vector<MeasurementsPtr> measurements_;
+    std::unordered_map<int, std::vector<ReMap>>  tagRemap_;//initialize时,从tagslam.yaml读入的tag_id_remap参数
+    std::map<ros::Time, std::set<int>> squash_;            //initialize时,从tagslam.yaml读入的squash参数
+    std::map<std::string, std::set<int>> camSquash_;       //initialize时,从tagslam.yaml读入的squash参数
+    std::vector<MeasurementsPtr> measurements_;            //initialize时,从tagslam.yaml读入的plane_measurements/distance measurement/coordinate measurement参数
   };
 }
