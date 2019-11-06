@@ -18,6 +18,7 @@ namespace tagslam {
 
   static int body_id = 0;
 
+// 决定make哪种继承类来描述 单tag板子/多tag板子
   static BodyPtr make_type(const std::string &name, const std::string &type) {
     BodyPtr p;
     if (type == "board") {
@@ -37,6 +38,7 @@ namespace tagslam {
     return (p);
   }
 
+  //基类里面,parse 共同的参数
   bool Body::parseCommon(XmlRpc::XmlRpcValue body) {
     try {
       isStatic_       = xml::parse<bool>(body,  "is_static");
@@ -90,18 +92,20 @@ namespace tagslam {
     return (true);
   }
 
+// parse 基类&继承类的body参数
   BodyPtr
   Body::parse_body(const string &name,  XmlRpc::XmlRpcValue body) {
     const string type = xml::parse<string>(body, "type");
-    const BodyPtr rb = make_type(name, type);
-    rb->parseCommon(body);
-    rb->parse(body, rb);
+    const BodyPtr rb = make_type(name, type);//单个tag or 多个tag的板
+    rb->parseCommon(body);//基类 里面parse 共同的参数
+    rb->parse(body, rb);//各个继承类里面parse专有的参数
     return (rb);
   }
 
+//                                     hamming distance
   TagPtr Body::findTag(int tagId, int bits) const {
     const auto it = tags_.find(tagId);//find,被查找元素的位置
-    return ((it == tags_.end() || it->second->getBits() != bits)?
+    return ((it == tags_.end() || it->second->getBits() != bits)?// 找不到 || hamming distance不对
             NULL: it->second);
   }
 

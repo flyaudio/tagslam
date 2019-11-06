@@ -269,11 +269,11 @@ namespace tagslam {
     BodyDefaults::parse(config);
 
     // now read "bodies"
-    bodies_ = Body::parse_bodies(config);
+    bodies_ = Body::parse_bodies(config);//1个kik_lab是一个body(包含多个tags)
     for (const auto &body: bodies_) {
-      graph_utils::add_body(graph_.get(), *body);
+      graph_utils::add_body(graph_.get(), *body);//share_ptr.get() 获取指针
       // add associated tags as vertices
-      for (const auto &tag: body->getTags()) {
+      for (const auto &tag: body->getTags()) {//tagList_
         tagMap_.insert(TagMap::value_type(tag->getId(), tag));
       }
       if (!body->isStatic()) {

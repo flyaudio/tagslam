@@ -8,7 +8,7 @@
 #include <iostream>
 
 namespace tagslam {
-  struct SimpleBody: public Body {
+  struct SimpleBody: public Body {//用SimpleBody来描述单个tag的板子
     SimpleBody(const std::string &n  = std::string(""),
                bool iS = false) : Body(n, iS) {
       type_ = "simple";

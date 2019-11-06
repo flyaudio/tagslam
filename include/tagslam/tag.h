@@ -49,7 +49,7 @@ namespace tagslam {
     double         size_;          // tag size in meters
     PoseWithNoise  poseWithNoise_; // tag pose relative body: T_b_o
     std::shared_ptr<Body> body_;   // body to which this tag belongs
-    Eigen::Matrix<double, 4, 3> objectCorners_;
+    Eigen::Matrix<double, 4, 3> objectCorners_;// 4个(x,y,z=0)的corner
   };
   typedef Tag::TagPtr TagPtr;
   typedef Tag::TagConstPtr TagConstPtr;

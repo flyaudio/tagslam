@@ -5,10 +5,12 @@ tagslam-98e56eb0e1dc379cd43aa2359dca6e3ab4e81ab4
 
 class Graph
 class GraphUpdater
+class Tag
+class PoseWithNoise 
 
 class GTSAMOptimizer: public Optimizer
-class Board:       public Body 
-struct SimpleBody: public Body 
+class Board:       public Body      #means 多个tag的板子 ?? ;然后用多态来管理 ??
+struct SimpleBody: public Body      #means 单个tag ??; 另一种理解,一个kik_lab是一个body(包含多个tag)
 class TagSlam: public TagFactory 
 class Sync<T1>: public SyncBase 
 

@@ -13,6 +13,7 @@ using std::cout;
 using std::endl;
 
 namespace tagslam {
+//constructor,按tag id/hamming distance/side lenght/pose/body来构造单个tag
   Tag::Tag(int ida, int bts, double s, const PoseWithNoise &pn,
              const std::shared_ptr<Body> &body) :
     id_(ida), bits_(bts), size_(s), poseWithNoise_(pn), body_(body)  {
@@ -21,13 +22,14 @@ namespace tagslam {
        s/2, -s/2, 0,
        s/2,  s/2, 0,
       -s/2,  s/2, 0;
-    if (poseWithNoise_.isValid() && body->overrides()) {
+    if (poseWithNoise_.isValid() && body->overrides()) {//override是什么情况??
       poseWithNoise_.setNoise(
         PoseNoise::make(body->getOverrideTagRotationNoise(),
                          body->getOverrideTagPositionNoise()));
     }
   }
 
+//parse 参数文件中的bodies->tags
   TagVec Tag::parseTags(XmlRpc::XmlRpcValue xmltags, double size,
                           const std::shared_ptr<Body> &body) {
     std::vector<TagPtr> tags;
