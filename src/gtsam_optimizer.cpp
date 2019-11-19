@@ -241,7 +241,7 @@ namespace tagslam {
       case RADTAN: {
         auto distModel = getRadTanModel(camName, ci);
         gtsam::Expression<Cal3DS3> cK(*distModel);
-        gtsam::Expression<gtsam::Point2> predict(cK, &Cal3DS3::uncalibrate,xp);
+        gtsam::Expression<gtsam::Point2> predict(cK, &Cal3DS3::uncalibrate,xp);//automatic differentiation
         newGraph_.addExpressionFactor(predict, imgPoint, pnit->second);
         break; }
       case EQUIDISTANT: {

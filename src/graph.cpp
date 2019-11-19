@@ -37,16 +37,18 @@ namespace tagslam {
   }
 
   double Graph::optimize(double thresh) {
-    return (optimizer_->optimize(thresh));
+    return (optimizer_->optimize(thresh));// =GTSAMOptimizer->optimize(thresh)
   }
   
   double Graph::optimizeFull(bool force) {
-    return (optimizer_->optimizeFull(force));
+    return (optimizer_->optimizeFull(force));// =GTSAMOptimizer->optimizeFull(force)
   }
 
+// 1,boost graph里增加1个vertex
+// 2,unordered_map里增加1个pair
   VertexDesc
   Graph::insertVertex(const VertexPtr &vp) {
-    const VertexDesc nv = boost::add_vertex(GraphVertex(vp), graph_);
+    const VertexDesc nv = boost::add_vertex(GraphVertex(vp), graph_);//vertex_property_type, graph
     idToVertex_.insert(IdToVertexMap::value_type(vp->getId(), nv));
     return (nv);
   }

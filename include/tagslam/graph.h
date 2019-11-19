@@ -51,7 +51,7 @@ namespace tagslam {
     VertexVec getConnected(const VertexDesc &v) const;
 
     void addEdge(const VertexDesc &from, const VertexDesc &to, int edgeId) {
-      boost::add_edge(from, to, GraphEdge(edgeId), graph_);
+      boost::add_edge(from, to, GraphEdge(edgeId), graph_);//from,to,edge_property,graph
     }
     
     VertexDesc addPose(const ros::Time &t, const string &name,
