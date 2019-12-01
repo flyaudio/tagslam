@@ -203,7 +203,7 @@ namespace tagslam {
     Profiler             profiler_;//没搞明白是有什么用??
     std::list<ros::Time> times_;
     rosbag::Bag          outBag_;
-    std::ofstream        tagCornerFile_;
+    std::ofstream        tagCornerFile_;//tag_corners.txt
     std::string          outBagName_;
     bool                 writeToBag_{false};
     std::string          optimizerMode_;

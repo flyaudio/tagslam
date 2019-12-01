@@ -69,7 +69,7 @@ namespace tagslam {
     VertexPtr getVertex(const VertexDesc f) const { return (graph_[f]); }
     VertexPtr operator[](const VertexDesc f) const { return (graph_[f]); }
     std::pair<BoostGraph::vertex_iterator, BoostGraph::vertex_iterator>
-    getVertexIterator() const { return (boost::vertices(graph_)); }
+    getVertexIterator() const { return (boost::vertices(graph_)); }//vertices()返回迭代器的头和尾。 节点迭代器指向该节点的描述符
     
     void setVerbosity(const string &v) {
       optimizer_->setVerbosity(v);
@@ -127,7 +127,7 @@ namespace tagslam {
     static string body_name(const string &body);
     static string cam_name(const string &cam);
     inline static bool is_valid(const VertexDesc &v) {
-      return (v != ULONG_MAX);
+      return (v != ULONG_MAX);//判断 vertex_descriptor 无限大??
     }
   private:
     typedef std::unordered_map<VertexId, VertexDesc> IdToVertexMap;
@@ -141,7 +141,7 @@ namespace tagslam {
     VertexVec                  factors_;
     IdToVertexMap              idToVertex_;
     VertexToOptMap             optimized_;
-    std::shared_ptr<Optimizer> optimizer_;
+    std::shared_ptr<Optimizer> optimizer_;//构造函数里,多态链接到GTSAMOptimizer()
   };
   typedef std::shared_ptr<Graph> GraphPtr;
   typedef std::shared_ptr<const Graph> GraphConstPtr;

@@ -48,7 +48,7 @@ namespace tagslam {
 // 2,unordered_map里增加1个pair
   VertexDesc
   Graph::insertVertex(const VertexPtr &vp) {
-    const VertexDesc nv = boost::add_vertex(GraphVertex(vp), graph_);//vertex_property_type, graph
+    const VertexDesc nv = boost::add_vertex(GraphVertex(vp), graph_);//vertex_property_type, graph;返回 节点描述符
     idToVertex_.insert(IdToVertexMap::value_type(vp->getId(), nv));
     return (nv);
   }
@@ -60,7 +60,7 @@ namespace tagslam {
     return (nv);
   }
 
-  std::vector<VertexDesc>
+  std::vector<VertexDesc>//查找相连的vertex
   Graph::getConnected(const VertexDesc &v) const {
     auto edges = boost::out_edges(v, graph_);
     std::vector<VertexDesc> c;
@@ -72,15 +72,15 @@ namespace tagslam {
 
   bool
   Graph::isOptimizableFactor(const VertexDesc &v) const {
-    if (graph_[v]->isValue()) {
+    if (graph_[v]->isValue()) {//graph_[v],利用描述符访问相应节点 / 边的属性;v 为 VertexDescriptor
       BOMB_OUT("vertex is no factor: " << graph_[v]->getLabel());
     }
     for (const auto &vv: getConnected(v)) {
       if (!isOptimized(vv)) {
-        return (false);
+        return (false);//if not found
       }
     }
-    return (true);
+    return (true);//if found,
   }
 
   std::vector<ValueKey>
@@ -116,7 +116,7 @@ namespace tagslam {
   Graph::VertexToOptMap::const_iterator
   Graph::findOptimized(const VertexDesc &v) const {
     VertexToOptMap::const_iterator it = optimized_.find(v);
-    if (it == optimized_.end()) {
+    if (it == optimized_.end()) {//if not found
       BOMB_OUT("not optimized: " << info(v));
     }
     return (it);
@@ -131,7 +131,7 @@ namespace tagslam {
 
   ValueKey Graph::findOptimizedPoseKey(const VertexDesc &v) const {
     VertexToOptMap::const_iterator it = optimized_.find(v);
-    if (it == optimized_.end()) {
+    if (it == optimized_.end()) { // if not found
       BOMB_OUT("cannot find opt pose: " << info(v));
     }
     if (it->second.size() != 1) {
@@ -183,9 +183,9 @@ namespace tagslam {
 
 
   void Graph::print(const string &prefix) const {
-    for (auto v = boost::vertices(graph_); v.first != v.second; ++v.first) {
+    for (auto v = boost::vertices(graph_); v.first != v.second; ++v.first) {//vertices()返回迭代器的头和尾. 节点迭代器指向该节点的描述符
       bool isOpt = (optimized_.find(*v.first) != optimized_.end());
-      ROS_DEBUG_STREAM(prefix << " " << graph_[*v.first]->getLabel()
+      ROS_DEBUG_STREAM(prefix << " " << graph_[*v.first]->getLabel()//利用VertexDescriptor可以索引VertexProperty
                        << ":" << (isOpt ? "O":"U"));
       if (graph_[*v.first]->isValue()) {
         PoseValueConstPtr  vp = std::dynamic_pointer_cast<const value::Pose>(graph_[*v.first]);

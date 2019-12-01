@@ -663,7 +663,7 @@ namespace tagslam {
     profiler_.record("eraseStoredFactors");
   }
 
-  void GraphUpdater::printPerformance() {
+  void GraphUpdater::printPerformance() {//耗费的时间
     ROS_INFO_STREAM("updater performance:");
     std::cout << profiler_ << std::endl;
   }

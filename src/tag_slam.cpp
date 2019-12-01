@@ -619,7 +619,7 @@ causes TagSLAM to write all output files to ~/.ros/
   }
 
   void TagSlam::publishBodyOdom(const ros::Time &t) {
-    for (const auto body_idx: irange(0ul, nonstaticBodies_.size())) {
+    for (const auto body_idx: irange(0ul, nonstaticBodies_.size())) {//通常只有一个
       const auto body = nonstaticBodies_[body_idx];
       Transform pose;
       if (graph_utils::get_optimized_pose(*graph_, t, *body, &pose)) {
@@ -975,7 +975,7 @@ causes TagSLAM to write all output files to ~/.ros/
   std::vector<TagConstPtr>
   TagSlam::findTags(const std::vector<Apriltag> &ta) {
     std::vector<TagConstPtr> tpv;
-    for (const auto &tag: ta) {
+    for (const auto &tag: ta) {//every tag
       TagConstPtr tagPtr = findTag(tag.id);
       if (tagPtr) {
         tpv.push_back(tagPtr);
@@ -985,17 +985,22 @@ causes TagSLAM to write all output files to ~/.ros/
     }
     return (tpv);
   }
-
+  
+/*
+1,RelativePosePrior
+2,TagProjection
+3,按tag像素大小排序
+*/
   void TagSlam::processTags(const std::vector<TagArrayConstPtr> &tagMsgs,
                              std::vector<VertexDesc> *factors) {
-    if (tagMsgs.size() != cameras_.size()) {
+    if (tagMsgs.size() != cameras_.size()) {//1 camera for 1 tagMsgs
       BOMB_OUT("tag msgs size mismatch: " << tagMsgs.size()
                << " " << cameras_.size());
     }
     typedef std::multimap<double, VertexDesc> MMap;
-    MMap sortedFactors;
+    MMap sortedFactors;//自动按key升序排序
 
-    for (const auto i: irange(0ul, cameras_.size())) {
+    for (const auto i: irange(0ul, cameras_.size())) {//every cam
       const ros::Time &t = tagMsgs[i]->header.stamp;
       const auto &cam = cameras_[i];
       const auto tags = findTags(tagMsgs[i]->apriltags);
@@ -1010,9 +1015,9 @@ causes TagSLAM to write all output files to ~/.ros/
         RelativePosePriorFactorPtr
           fac(new factor::RelativePosePrior(t, ros::Time(0), pn, name));
         VertexDesc v = fac->addToGraph(fac, graph_.get());
-        sortedFactors.insert(MMap::value_type(1e10, v));
+        sortedFactors.insert(MMap::value_type(1e10, v));//10,000,000,000
       }
-      for (const auto &tag: tagMsgs[i]->apriltags) {
+      for (const auto &tag: tagMsgs[i]->apriltags) {//every tag in every cam
         TagConstPtr tagPtr = findTag(tag.id);
         if (tagPtr) {
           const geometry_msgs::Point *corners = &(tag.corners[0]);
@@ -1028,13 +1033,13 @@ causes TagSLAM to write all output files to ~/.ros/
         }
       }
       std::stringstream ss;
-      for (const auto &tag: tagMsgs[i]->apriltags) {
+      for (const auto &tag: tagMsgs[i]->apriltags) {//every tag in every cam
         ss << " " << tag.id;
       }
       ROS_INFO_STREAM("frame " << frameNum_ << " " << cam->getName()
                       << " sees tags: " << ss.str());
     }
-    for (auto it = sortedFactors.rbegin(); it != sortedFactors.rend(); ++it) {
+    for (auto it = sortedFactors.rbegin(); it != sortedFactors.rend(); ++it) {//升序变为降序
       factors->push_back(it->second);
     }
   }
@@ -1158,7 +1163,7 @@ causes TagSLAM to write all output files to ~/.ros/
   TagSlam::writeTagCorners(const ros::Time &t, int camIdx,
                             const TagConstPtr &tag,
                             const geometry_msgs::Point *img_corners) {
-    for (const auto i: irange(0, 4)) {
+    for (const auto i: irange(0, 4)) {//every 4 corner
       tagCornerFile_ << t << " " << tag->getId() << " " << camIdx << " "
                      << i << " " << img_corners[i].x << " "
                      << img_corners[i].y << std::endl;

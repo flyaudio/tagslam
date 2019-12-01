@@ -104,6 +104,12 @@ namespace tagslam {
     PoseWithNoise       poseWithNoise_; // initial pose prior if valid
     double              overrideTagRotationNoise_{-1};
     double              overrideTagPositionNoise_{-1};
+/*
+Sometimes it can help to avoid jump. 
+The number should be the maximum distance that you think vehicle moves between two consecutive frames. 
+For example if the vehicle moves 1 meter/sec and the camera is 20fps, between two frames vehicle moves 0.05 meters.
+But very big odom noise makes the optimisation unstable and the result will be inaccurate. But maybe you can try to see the effect based on the vehicle speed. 
+*/
     double              fakeOdomTranslationNoise_{-1.0};
     double              fakeOdomRotationNoise_{-1.0};
     // variables used in case odometry data is available

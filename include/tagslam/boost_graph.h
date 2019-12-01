@@ -12,6 +12,6 @@
 namespace tagslam {
   typedef  boost::adjacency_list<
     boost::listS, boost::vecS, boost::undirectedS,
-    GraphVertex, GraphEdge> BoostGraph;
-  typedef BoostGraph::vertex_descriptor BoostGraphVertex;
+    GraphVertex, GraphEdge> BoostGraph;//图的定义. 后面两个参数分别是 节点属性 和 边属性
+  typedef BoostGraph::vertex_descriptor BoostGraphVertex;//节点描述符
 }
