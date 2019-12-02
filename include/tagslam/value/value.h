@@ -1,4 +1,4 @@
-/* -*-c++-*--------------------------------------------------------------------
+﻿/* -*-c++-*--------------------------------------------------------------------
  * 2019 Bernd Pfrommer bernd.pfrommer@gmail.com
  */
 
@@ -15,7 +15,7 @@ namespace tagslam {
         Vertex(s, "ellipse", t) {
       }
       virtual ~Value() {}
-      bool isValue() const override { return (true); }
+      bool isValue() const override { return (true); }/* vertex is no factor */
       virtual std::string getLabel() const override {
         return (Vertex::getLabel());
       }

@@ -1,4 +1,4 @@
-/* -*-c++-*--------------------------------------------------------------------
+﻿/* -*-c++-*--------------------------------------------------------------------
  * 2019 Bernd Pfrommer bernd.pfrommer@gmail.com
  */
 
@@ -176,7 +176,7 @@ namespace tagslam {
     return (graph_[v]->getLabel());
   }
 
-  bool Graph::hasPose(const ros::Time &t,
+  bool Graph::hasPose(const ros::Time &t, //查询 idToVertex_
                       const string &name) const {
     return (hasId(value::Pose::id(t, name)));
   }
@@ -187,7 +187,7 @@ namespace tagslam {
       bool isOpt = (optimized_.find(*v.first) != optimized_.end());
       ROS_DEBUG_STREAM(prefix << " " << graph_[*v.first]->getLabel()//利用VertexDescriptor可以索引VertexProperty
                        << ":" << (isOpt ? "O":"U"));
-      if (graph_[*v.first]->isValue()) {
+      if (graph_[*v.first]->isValue()) {//这里好像并没有什么作用 ??
         PoseValueConstPtr  vp = std::dynamic_pointer_cast<const value::Pose>(graph_[*v.first]);
       }
     }
@@ -198,7 +198,7 @@ namespace tagslam {
     for (auto v = boost::vertices(graph_); v.first != v.second; ++v.first) {
       const VertexConstPtr vp = graph_[*v.first];
       if (isOptimized(*v.first)) {
-        if (vp->isValue()) { numOptVal++;
+        if (vp->isValue()) { numOptVal++;//still confused with “fac" "value" ??
         } else { numOptFac++; }
       } else {
         if (vp->isValue()) { numVal++;
@@ -244,6 +244,7 @@ namespace tagslam {
     return (vk);
   }
 
+/* 在所有 factors_ 里,找已经optimized的 factors_*/
   VertexVec Graph::getOptimizedFactors() const {
     VertexVec vv;
     std::copy_if(
@@ -267,9 +268,9 @@ namespace tagslam {
 
   Graph::ErrorToVertexMap Graph::getErrorMap() const {
     ErrorToVertexMap errMap;
-    const auto vv = getOptimizedFactors();
-    const auto vk = getOptimizerKeys(vv);
-    const auto facErr = optimizer_->getErrors(vk);
+    const auto vv = getOptimizedFactors();/* 在所有 factors_ 里,找已经optimized的 factors_ */
+    const auto vk = getOptimizerKeys(vv);/* 找 factors_ 对应的key */
+    const auto facErr = optimizer_->getErrors(vk);/* 通过key,索引gtsam::ExpressionFactorGraph */
     for (const auto v: vv) {
       const VertexToOptMap::const_iterator it = optimized_.find(v);
       if (it != optimized_.end()) {

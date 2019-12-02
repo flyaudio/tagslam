@@ -1,4 +1,4 @@
-/* -*-c++-*--------------------------------------------------------------------
+﻿/* -*-c++-*--------------------------------------------------------------------
  * 2019 Bernd Pfrommer bernd.pfrommer@gmail.com
  */
 
@@ -138,9 +138,9 @@ namespace tagslam {
 
     // ------ variables --------------
     BoostGraph                 graph_;
-    VertexVec                  factors_;
+    VertexVec                  factors_;/* 继承factor class的所有vertex*/
     IdToVertexMap              idToVertex_;
-    VertexToOptMap             optimized_;
+    VertexToOptMap             optimized_;// 记录已经优化了的 vertex
     std::shared_ptr<Optimizer> optimizer_;//构造函数里,多态链接到GTSAMOptimizer()
   };
   typedef std::shared_ptr<Graph> GraphPtr;
