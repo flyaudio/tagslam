@@ -358,7 +358,7 @@ namespace tagslam {
                                     double minAngle) {
     auto fp = std::dynamic_pointer_cast<factor::TagProjection>((*g)[v]);
     if (!fp) {
-      return (false);
+      return (false);//检查是否TagProjection子类
     }
     // do homography for this vertex
     const CameraIntrinsics ci = fp->getCamera()->getIntrinsics();
