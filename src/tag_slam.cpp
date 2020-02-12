@@ -942,7 +942,7 @@ causes TagSLAM to write all output files to ~/.ros/
       const auto &vp = graph_->getVertex(v.second);
       f << FMT(8,3) << v.first << " ";
       write_time(f, vp->getTime());
-      f << " " <<  *vp << std::endl;
+      f << " " <<  *vp << std::endl;//第2个空格//<<重载
     }
   }
 

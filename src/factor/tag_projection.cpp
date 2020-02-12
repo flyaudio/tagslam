@@ -25,7 +25,7 @@ namespace tagslam {
 
     string TagProjection::getLabel() const {
       std::stringstream ss;
-      ss << "proj:" << name_ << ",t:" << format_time(time_);
+      ss << "proj:" << name_ << ",t:" << format_time(time_);//e.g: in error_map.txt  proj:cam0-tag:2,t:615822
       return (ss.str());
     }
 
