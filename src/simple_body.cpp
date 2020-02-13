@@ -10,7 +10,8 @@
 namespace tagslam {
   using boost::irange;
 
-  bool SimpleBody::parse(XmlRpc::XmlRpcValue body, const BodyPtr &bp) {//继承类里面,parse 单个tag板子的专有参数
+  //SimpleBody继承类里,parse all 'tags' in yml
+  bool SimpleBody::parse(XmlRpc::XmlRpcValue body, const BodyPtr &bp) {
     if (body.hasMember("tags")) {
       TagVec tv = Tag::parseTags(body["tags"], defaultTagSize_, bp);
       addTags(tv);

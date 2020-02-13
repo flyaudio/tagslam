@@ -12,7 +12,7 @@
 #include <iostream>
 
 namespace tagslam {
-  class Body {
+  class Body {// 对应yml文件中的bodies
     using string = std::string;
   public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW //这个宏在new一个对象时会总是返回一个对齐的指针
@@ -65,14 +65,14 @@ namespace tagslam {
 
     // setters
 
-    void   setType(const string &t)                 { type_ = t; }
+    void   setType(const string &t)                 { type_ = t; }//'simple' or 'board'
     void   setId(int id)                            { id_   = id; }
     void   setPoseWithNoise(const PoseWithNoise &p) { poseWithNoise_ = p; }
 
     // helper functions
 
-    bool   ignoreTag(int tagId) const {
-      return (ignoreTags_.count(tagId) != 0); }
+    bool   ignoreTag(int tagId) const {//查找yml中指定的'ignore_tags'
+      return (ignoreTags_.count(tagId) != 0); }//在set中查找
     bool    overrides() const {
       return (overrideTagRotationNoise_ > 0 &&
               overrideTagPositionNoise_ > 0);
@@ -94,13 +94,13 @@ namespace tagslam {
     // -------------------------
     string              name_;
     string              frameId_;
-    int                 id_{-1};
+    int                 id_{-1};//如果yml中有多个body,用id来区别
     bool                isStatic_{true};
-    string              type_;
+    string              type_;//'simple' or 'board'
     int                 maxHammingDistance_{2};
     TagMap             tags_; // tags that are hanging off of it
-    std::set<int>       ignoreTags_; // reject these tags for this body
-    double              defaultTagSize_{0}; // tag size for discovered tags
+    std::set<int>       ignoreTags_; // reject these tags for this body//yml中的'ignore_tags'
+    double              defaultTagSize_{0}; // tag size for discovered tags//yml中的'default_tag_size'
     PoseWithNoise       poseWithNoise_; // initial pose prior if valid
     double              overrideTagRotationNoise_{-1};
     double              overrideTagPositionNoise_{-1};
@@ -125,7 +125,7 @@ But very big odom noise makes the optimisation unstable and the result will be i
     // -------- static functions
     static BodyPtr parse_body(const string &name, XmlRpc::XmlRpcValue config);
   private:
-    std::list<TagPtr>   tagList_;
+    std::list<TagPtr>   tagList_;//有了tags_,why还要tagList_ ??
   };
   using BodyPtr      = Body::BodyPtr;
   using BodyConstPtr = Body::BodyConstPtr;

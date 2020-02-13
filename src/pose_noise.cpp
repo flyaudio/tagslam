@@ -18,7 +18,7 @@ namespace tagslam {
 
   // static function
   PoseNoise PoseNoise::make(double a, double p) {//make成3维的point
-    return (make(Point3d(a, a, a), Point3d(p, p, p)));
+    return (make(Point3d(a, a, a), Point3d(p, p, p)));//angle.x=angle.y=angle.z; position.x=position.y=position.z
   }
  
   static const PoseNoise::Matrix6d sqrt_info_to_sigma(

@@ -36,7 +36,7 @@ namespace tagslam {
 
     string RelativePosePrior::getLabel() const {
       std::stringstream ss;
-      ss << "rpp:" << name_ << ",t:" << format_time(time_);
+      ss << "rpp:" << name_ << ",t:" << format_time(time_);//in error_map.txt, e.g.  rpp:cam:cam0,t:677919
       return (ss.str());
     }
   }

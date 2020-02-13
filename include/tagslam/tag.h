@@ -45,7 +45,7 @@ namespace tagslam {
 
     // ------- variables --------------
     int            id_;            // tag id
-    int            bits_{6};       // determines tag family
+    int            bits_{6};       // determines tag family//hamming distance
     double         size_;          // tag size in meters
     PoseWithNoise  poseWithNoise_; // tag pose relative body: T_b_o
     std::shared_ptr<Body> body_;   // body to which this tag belongs
@@ -54,6 +54,6 @@ namespace tagslam {
   typedef Tag::TagPtr TagPtr;
   typedef Tag::TagConstPtr TagConstPtr;
   typedef Tag::TagVec TagVec;
-  typedef std::map<int, TagPtr> TagMap;
+  typedef std::map<int, TagPtr> TagMap;//<tag id, tag类>
   std::ostream &operator<<(std::ostream &os, const Tag &tag);
 }

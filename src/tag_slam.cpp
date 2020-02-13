@@ -269,14 +269,14 @@ namespace tagslam {
     BodyDefaults::parse(config);
 
     // now read "bodies"
-    bodies_ = Body::parse_bodies(config);//1个kik_lab是一个body(包含多个tags)
+    bodies_ = Body::parse_bodies(config);//一般含有2个body;1个kik_lab是1个body(包含多个tags)
     for (const auto &body: bodies_) {
       graph_utils::add_body(graph_.get(), *body);//share_ptr.get() 获取指针
       // add associated tags as vertices
       for (const auto &tag: body->getTags()) {//tagList_
         tagMap_.insert(TagMap::value_type(tag->getId(), tag));
       }
-      if (!body->isStatic()) {
+      if (!body->isStatic()) {//'rig' body
         if (body->getFakeOdomTranslationNoise() > 0 &&
             body->getFakeOdomRotationNoise() > 0) {
           useFakeOdom_ = true;
@@ -806,7 +806,7 @@ causes TagSLAM to write all output files to ~/.ros/
 
   TagPtr TagSlam::addTag(int tagId, const BodyPtr &body) const {
     TagPtr p;
-    if (body->ignoreTag(tagId)) {
+    if (body->ignoreTag(tagId)) {//查找yml中指定的'ignore_tags'
       return (p);
     }
     p = Tag::make(tagId, 6 /*num bits = tag family */,
@@ -820,10 +820,10 @@ causes TagSLAM to write all output files to ~/.ros/
   }
   
   TagConstPtr TagSlam::findTag(int tagId) {
-    TagMap::iterator it = tagMap_.find(tagId);
+    TagMap::iterator it = tagMap_.find(tagId);//在unordered_map中查找
     TagPtr p;
-    if (it == tagMap_.end()) {
-      if (!defaultBody_) {
+    if (it == tagMap_.end()) {//not found
+      if (!defaultBody_) {//no default body,then ignore
         ROS_WARN_STREAM("no default body, ignoring tag: " << tagId);
         return (p);
       } else {
@@ -831,7 +831,7 @@ causes TagSLAM to write all output files to ~/.ros/
         if (!p) {
           return (p);
         }
-        auto iit = tagMap_.insert(TagMap::value_type(tagId, p));
+        auto iit = tagMap_.insert(TagMap::value_type(tagId, p));//在unordered_map中插入
         it = iit.first;
       }
     }

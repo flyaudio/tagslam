@@ -13,7 +13,7 @@ using std::cout;
 using std::endl;
 
 namespace tagslam {
-//constructor,按tag id/hamming distance/side lenght/pose/body来构造单个tag
+//constructor,按tag id/hamming distance/side lenght/pose/body/4 objectCorners,来构造单个tag
   Tag::Tag(int ida, int bts, double s, const PoseWithNoise &pn,
              const std::shared_ptr<Body> &body) :
     id_(ida), bits_(bts), size_(s), poseWithNoise_(pn), body_(body)  {

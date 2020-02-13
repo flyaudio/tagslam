@@ -82,7 +82,7 @@ namespace tagslam {
     int                           maxIter_{20};
     double                        lastError_{0};
     double                        errorThreshold_{2.0};
-    RadTanModelMap                radTanModelMap_;
+    RadTanModelMap                radTanModelMap_;//<cam name, intrinsic>; multiple camera
     EquiModelMap                  equiModelMap_;
     PixelNoiseMap                 pixelNoiseMap_;
     OptimizerMode                 mode_{SLOW};

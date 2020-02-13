@@ -16,11 +16,11 @@ namespace tagslam {
     typedef std::shared_ptr<const Board> BoardConstPtr;
 
     Board(const string &n  = string(""), bool iS = false) :
-      Body(n, iS) {
+      Body(n, iS) {//基类的constructor
       type_ = "board";
     }
     bool printTags() const override { return (false); }
-    bool parse(XmlRpc::XmlRpcValue body, const BodyPtr &bp) override;
+    bool parse(XmlRpc::XmlRpcValue body, const BodyPtr &bp) override;//覆盖基类的parse
     bool write(std::ostream &os, const string &prefix) const override;
   private:
     int     tagStartId_{-1};

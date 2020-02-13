@@ -77,7 +77,7 @@ namespace tagslam {
       if (body.isStatic()) {
         const ros::Time t0(0);
         const string name = Graph::body_name(body.getName());
-        add_pose_maybe_with_prior(g, t0, name, body.getPoseWithNoise(), false);
+        add_pose_maybe_with_prior(g, t0, name, body.getPoseWithNoise(), false);//T_world_lab
       } 
       // add associated tags as vertices
       for (const auto &tag: body.getTags()) {

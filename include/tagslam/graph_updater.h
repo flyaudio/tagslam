@@ -64,7 +64,7 @@ namespace tagslam {
     int                numIncrementalOpt_{0};
     double             subgraphError_{0};
     double             lastIncError_{0};
-    bool               optimizeFullGraph_{false};
+    bool               optimizeFullGraph_{false};//'full' in yml
 
     string             optimizerMode_{"slow"};
     double             maxSubgraphError_{15.0};

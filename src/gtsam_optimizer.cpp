@@ -73,6 +73,14 @@ namespace tagslam {
     isam2_ = make_isam2(mode_);
   }
 
+/*
+input:
+	camera name
+	CameraIntrinsics
+	
+output
+	camera intrinsic
+*/
   std::shared_ptr<Cal3DS3> GTSAMOptimizer::getRadTanModel(
     const string &cname, const CameraIntrinsics &ci) {
     // TODO: introduce camera ID and use lookup table!
@@ -95,7 +103,15 @@ namespace tagslam {
     }
     return (it->second);
   }
-  
+
+/*
+input:
+	camera name
+	CameraIntrinsics
+	  
+output
+	camera intrinsic
+*/
   std::shared_ptr<Cal3FS2> GTSAMOptimizer::getEquiModel(
     const string &cname, const CameraIntrinsics &ci) {
     // TODO: introduce camera ID and use lookup table!

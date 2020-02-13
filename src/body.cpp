@@ -38,7 +38,7 @@ namespace tagslam {
     return (p);
   }
 
-  //基类里面,parse 共同的参数
+  //Body基类,parse 共同的参数
   bool Body::parseCommon(XmlRpc::XmlRpcValue body) {
     try {
       isStatic_       = xml::parse<bool>(body,  "is_static");
@@ -92,11 +92,12 @@ namespace tagslam {
     return (true);
   }
 
-// parse 基类&继承类的body参数
+// parse 'bodies'
+// parse 'tags'
   BodyPtr
   Body::parse_body(const string &name,  XmlRpc::XmlRpcValue body) {
-    const string type = xml::parse<string>(body, "type");
-    const BodyPtr rb = make_type(name, type);//单个tag or 多个tag的板
+    const string type = xml::parse<string>(body, "type");//读入'type'参数
+    const BodyPtr rb = make_type(name, type);//构造 单个tag or 多个tag的 Body类
     rb->parseCommon(body);//基类 里面parse 共同的参数
     rb->parse(body, rb);//各个继承类里面parse专有的参数
     return (rb);

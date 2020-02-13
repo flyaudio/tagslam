@@ -31,7 +31,7 @@ namespace tagslam {
       const ros::Time &getPreviousTime() const { return (prevTime_); }
       const PoseWithNoise &getPoseWithNoise() const {return (poseWithNoise_);}
     private:
-      ros::Time     prevTime_;
+      ros::Time     prevTime_;//??
       PoseWithNoise poseWithNoise_;
     };
   }
