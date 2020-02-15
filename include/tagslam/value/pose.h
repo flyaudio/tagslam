@@ -30,7 +30,7 @@ namespace tagslam {
         return (make_id(t, n));
       }
     private:
-      bool      isCameraPose_{false};
+      bool      isCameraPose_{false};//whether camera pose(pose有两种)
     };
   }
   typedef std::shared_ptr<value::Pose> PoseValuePtr;

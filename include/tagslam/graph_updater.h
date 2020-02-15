@@ -22,8 +22,8 @@ namespace tagslam {
   struct SubGraph {
     typedef std::deque<VertexDesc> FactorCollection;
     typedef std::set<VertexDesc>  ValueCollection;
-    FactorCollection  factors;
-    ValueCollection   values;
+    FactorCollection  factors;//Factor vertex
+    ValueCollection   values; //Value vertex
     double            error_{0};
   };
 

@@ -37,8 +37,14 @@ namespace tagslam {
       graph_utils::plot(ss.str(), &g);
     }
 
-
-
+/*
+func
+	只要找到1个就return
+input
+	vv: Value_vertex
+output
+	p: Factor_vertex,AbsolutePosePrior
+*/
     static AbsolutePosePriorFactorPtr
     find_abs_pose_prior(const Graph &g, const VertexDesc &vv) {
       AbsolutePosePriorFactorPtr p;

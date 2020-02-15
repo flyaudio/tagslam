@@ -74,18 +74,18 @@ namespace tagslam {
     // ------------ variables ------------
     ValueKey                      key_{0};
     string                        verbosity_;
-    gtsam::Values                 values_;
-    gtsam::Values                 newValues_;
+    gtsam::Values                 values_;   //对应 fullGraph_ 的 variable的 Values;内部实现是<key,value>
+    gtsam::Values                 newValues_;//对应 newGraph_    的 variable的 Values
     std::shared_ptr<gtsam::ISAM2> isam2_;
     gtsam::ExpressionFactorGraph  fullGraph_;
-    gtsam::ExpressionFactorGraph  newGraph_;
+    gtsam::ExpressionFactorGraph  newGraph_;//存储多个 ExpressionFactors
     int                           maxIter_{20};
-    double                        lastError_{0};
+    double                        lastError_{0};//full optimize之后的error
     double                        errorThreshold_{2.0};
     RadTanModelMap                radTanModelMap_;//<cam name, intrinsic>; multiple camera
     EquiModelMap                  equiModelMap_;
     PixelNoiseMap                 pixelNoiseMap_;
     OptimizerMode                 mode_{SLOW};
-    std::map<OptimizerKey, gtsam::Matrix> covariances_;
+    std::map<OptimizerKey, gtsam::Matrix> covariances_;//<key of variable, matrix>
   };
 }

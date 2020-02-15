@@ -158,23 +158,34 @@ output
     return (key);
   }
 
+/*
+input:
+	key of variables that need to be optimized
+	deltaPose: measurement
+
+output:
+	FactorKey: index of a factor
+*/
   FactorKey
   GTSAMOptimizer::addRelativePosePrior(ValueKey key1, ValueKey key2,
                                        const PoseWithNoise &deltaPose) {
     // key1 = key2 * deltaPose
     newGraph_.push_back(
-      gtsam::BetweenFactor<gtsam::Pose3>(
-        key1, key2, gtsam_utils::to_gtsam(deltaPose.getPose()),
-        gtsam_utils::to_gtsam(deltaPose.getNoise())));
-    return (fullGraph_.size() + newGraph_.size() - 1);
+      gtsam::BetweenFactor<gtsam::Pose3>(//顶点类型
+        key1, key2, gtsam_utils::to_gtsam(deltaPose.getPose()),//连接顶点的序号1,序号2,观测值
+        gtsam_utils::to_gtsam(deltaPose.getNoise())));//噪声模型
+    return (fullGraph_.size() + newGraph_.size() - 1);//??
   }
 
+/*
+固定1个顶点，在gtsam中相当于添加1个先验因子
+*/
   FactorKey GTSAMOptimizer::addAbsolutePosePrior(ValueKey key,
                                                  const PoseWithNoise &pwn) {
-    newGraph_.push_back(gtsam::PriorFactor<gtsam::Pose3>
-                        (key, gtsam_utils::to_gtsam(pwn.getPose()),
-                         gtsam_utils::to_gtsam(pwn.getNoise())));
-    return (fullGraph_.size() + newGraph_.size() - 1);
+    newGraph_.push_back(gtsam::PriorFactor<gtsam::Pose3>//顶点类型
+                        (key, gtsam_utils::to_gtsam(pwn.getPose()),//序号,观测值
+                         gtsam_utils::to_gtsam(pwn.getNoise())));//噪声模型
+    return (fullGraph_.size() + newGraph_.size() - 1);// ??
   }
 
   FactorKey GTSAMOptimizer::addDistanceMeasurement(
@@ -218,6 +229,10 @@ output
     return (fullGraph_.size() + newGraph_.size() - 1);
   }
 
+/*
+output:
+	vector<FactorKey>: 对应4个factor,所以用vector装载
+*/
   std::vector<FactorKey>
   GTSAMOptimizer::addTagProjectionFactor(
     const Eigen::Matrix<double, 4, 2> &imgCorners,
@@ -231,7 +246,7 @@ output
     std::vector<FactorKey> keys;
     keys.reserve(4);
     // Expression: class that supports automatic differentiation.
-    gtsam::Expression<gtsam::Pose3>  T_b_o_fac(T_b_o);
+    gtsam::Expression<gtsam::Pose3>  T_b_o_fac(T_b_o);//按key索引
     gtsam::Expression<gtsam::Pose3>  T_w_b_fac(T_w_b);
     gtsam::Expression<gtsam::Pose3>  T_r_c_fac(T_r_c);
     gtsam::Expression<gtsam::Pose3>  T_w_r_fac(T_w_r);
@@ -263,8 +278,8 @@ output
       case EQUIDISTANT: {
         auto distModel = getEquiModel(camName, ci);
         gtsam::Expression<Cal3FS2> cK(*distModel);
-        gtsam::Expression<gtsam::Point2> predict(cK, &Cal3FS2::uncalibrate,xp);
-        newGraph_.addExpressionFactor(predict, imgPoint, pnit->second);
+        gtsam::Expression<gtsam::Point2> predict(cK, &Cal3FS2::uncalibrate,xp);//h(x):	expression that implements measurement function
+        newGraph_.addExpressionFactor(predict, imgPoint, pnit->second);//|h(x)-z|^2_R
         break;  }
       default:
         BOMB_OUT("invalid dist model: " << ci.getDistortionModel());
@@ -275,6 +290,10 @@ output
     return (keys);
   }
 
+/*
+	计算每个factor的error
+	choose the max 
+*/
   double GTSAMOptimizer::getMaxError() const {
     double me(0);
     for (const auto i: fullGraph_) {
@@ -285,7 +304,10 @@ output
     }
     return (me);
   }
-  
+
+/*
+	挑选>thresh的factor,并打印相关信息
+*/  
   double GTSAMOptimizer::checkForLargeErrors(double thresh) const {
     double me(0);
     for (const auto i: fullGraph_) {
@@ -371,7 +393,9 @@ output
     return (hasValidError ? lastError_ : -1.0);
   }
 
-
+/*
+	set initial pose on Values.at(k)
+*/
   void GTSAMOptimizer::setPose(ValueKey k, const Transform &pose) {
     values_.at<gtsam::Pose3>(k) = gtsam_utils::to_gtsam(pose);
   }
@@ -399,6 +423,7 @@ output
   }
 #endif
 
+/* 尝试计算fullGraph_ + newGraph_ 的error*/
   double GTSAMOptimizer::errorFull() {
     gtsam::ExpressionFactorGraph  testGraph = fullGraph_;
     testGraph += newGraph_;
@@ -420,6 +445,19 @@ output
     }
   }
 
+/*
+	1.check newGraph_ & newValues_ 是否empty
+	2.叠加 fullGraph_ ,newGraph_ ,values_ ,newValues_
+	3.构建LM算法参数类
+	4.打印优化前后newGraph_的Values
+	5.清空newGraph_
+	
+input:
+	force: 强制进行full 优化
+
+output:
+	lastError_
+*/
   double GTSAMOptimizer::doOptimizeFull(bool force) {
     ROS_DEBUG_STREAM("optimizing full(" << force << ") new fac: " <<
                      newGraph_.size() << ", new val: " << newValues_.size());
@@ -452,8 +490,9 @@ output
     newValues_.clear();
     return (lastError_);
   }
-    
-  PoseNoise GTSAMOptimizer::getMarginal(const ValueKey k)  {//get covariance
+
+/* get covariance of variable( Values.at(k) ) */
+  PoseNoise GTSAMOptimizer::getMarginal(const ValueKey k)  {
     try {
       auto it = covariances_.find(k);
       if (it == covariances_.end()) {//if no, then add one
@@ -474,6 +513,13 @@ output
     isam2_->update(fullGraph_, values_);
   }
 
+/* 
+input:
+	keys: FactorKey可以索引对应的factor
+output:
+	KeyToErrorMap: <FactorKey, error>
+	
+*/
   KeyToErrorMap
   GTSAMOptimizer::getErrors(const std::vector<FactorKey> &keys) const {
     KeyToErrorMap ke;
@@ -518,7 +564,7 @@ output
     std::cout << " factor: " << std::endl;
     i->print();  std::cout <<  std::endl
                            << "   corresponding values: " << std::endl;
-    for (const auto &fk: i->keys()) {
+    for (const auto &fk: i->keys()) {//得到对应variable的key
       testValues.at(fk).print();
       std::cout << std::endl;
     }

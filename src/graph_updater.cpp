@@ -22,17 +22,32 @@ namespace tagslam {
 
   using boost::irange;
   typedef GraphUpdater::VertexDeque VertexDeque;
-
+/*deque<VertexDesc> 中find v */
   static bool contains(const std::deque<VertexDesc> &c, const VertexDesc &v) {
     return (std::find(c.begin(), c.end(), v) != c.end());
   }
+/*vector<VertexDesc> 中find v */
   static bool contains(const std::vector<VertexDesc> &c, const VertexDesc &v) {
     return (std::find(c.begin(), c.end(), v) != c.end());
   }
 
+/*
+假设factor也是vertex：
+转换成factor基类
+Distance/Coordinate这两种factor都不能establish a pose
+
+input:
+	graph: boost graph
+	SubGraph: 
+	fac: Factor_vertex
+output:
+	valueVertex: pose which is unoptimized
+	numMissing: 
+	values: connected Value_vertex index by Factor_vertex
+*/
   static int
-  examine_connected_values(const Graph &graph, const VertexDesc &fac,
-                           const SubGraph &covered, VertexDesc *valueVertex,
+  examine_connected_values(const Graph &graph, const VertexDesc &fac,//Factor vertex
+                           const SubGraph &covered, VertexDesc *valueVertex,//Value vertex
                            VertexDeque *values) {
     // returns number of missing values:
     //
@@ -40,17 +55,22 @@ namespace tagslam {
     // 1: one missing, may be able to establish a new pose!
     // >1: too many missing, out of luck
     //
-    auto fp = factor::cast_const(graph[fac]);
-    if (!fp) {
+    auto fp = factor::cast_const(graph[fac]);//转成factor基类
+    if (!fp) {//不是factor类型的vertex
       BOMB_OUT("examined vertex is no factor: " + graph.info(fac));
     }
     // find out if this factor allows us to determine a new value
-    std::vector<VertexDesc> conn = graph.getConnected(fac);
+    std::vector<VertexDesc> conn = graph.getConnected(fac);//Factor vertex连接着Value vertex
     int numEdges(0), numValid(0);
     for (const auto vv: conn) {
       VertexConstPtr vvp = graph.getVertex(vv);
       ValueConstPtr   vp = std::dynamic_pointer_cast<const value::Value>(vvp);
       numEdges++;
+	  /*
+		is Value vertex && 已经放到GTSAMOptimizer
+	||
+		subgraph has this Value vertex	
+	  */
       if ((vp && graph.isOptimized(vv)) || covered.values.count(vv) != 0) {
         //ROS_DEBUG_STREAM("   pose is optimized: " << graph.info(vv));
         numValid++;
@@ -196,6 +216,13 @@ namespace tagslam {
     return (sv);
   }
 
+/*
+input
+	v: Factor_vertex 
+output
+	conn: connected Value_vertex index by v
+	missingIdx: 
+*/
   static int find_connected_poses(const Graph &graph,
                                   VertexDesc v, VertexVec *conn) {
     int missingIdx(-1), edgeNum(0), numMissing(0);

@@ -33,4 +33,6 @@ class Coordinate: public Measurements
 class Distance:   public Measurements 
 class Plane:      public Measurements 
 
-    
+boost graph中有两类vertex：
+    1.Factor
+    2.Value

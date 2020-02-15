@@ -19,8 +19,8 @@ namespace tagslam {
       const VertexDesc cp = g->findPose(getTime(), getName());
       checkIfValid(cp, "no current pose for relative pose prior");
       const VertexDesc fv = g->insertFactor(vp);
-      g->addEdge(fv, pp, 0);
-      g->addEdge(fv, cp, 1);
+      g->addEdge(fv, pp, 0);//pp: previous pose
+      g->addEdge(fv, cp, 1);//cp: current pose
       return (fv);
     }
 
