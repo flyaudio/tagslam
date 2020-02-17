@@ -260,6 +260,10 @@ output
     }
   }
 
+/*
+find all the vertex(Factor + Value) in graph
+print the number of opt/unopt vertex(Factor + Value)
+*/
   string Graph::getStats() const {
     int numFac(0), numOptFac(0), numVal(0), numOptVal(0);
     for (auto v = boost::vertices(graph_); v.first != v.second; ++v.first) {
@@ -277,7 +281,11 @@ output
        << " opt vals: " << numOptVal << " unopt vals: " << numVal;
     return (ss.str());
   }
-
+  
+  /*
+  find all the vertex(Factor + Value) in graph
+  print if it's in optimized_
+  */
   void Graph::printUnoptimized() const {
     for (auto v = boost::vertices(graph_); v.first != v.second; ++v.first) {
       const VertexConstPtr vp = graph_[*v.first];
@@ -287,10 +295,20 @@ output
     }
   }
 
+/*
+func
+add up all the optimized factor error(in GTSAM)
+	1.get all optimized factor_vertex
+	2.find it's factor key in GTSAM
+	3.get the error for the factor
+	4.sum
+output
+	err
+*/
   double
   Graph::getError(const VertexDesc &v) const {
-    const auto vv = getOptimizedFactors();
-    const auto vk = getOptimizerKeys(vv);
+    const auto vv = getOptimizedFactors();//vector of vertex
+    const auto vk = getOptimizerKeys(vv);//vector of key
     const auto facErr = optimizer_->getErrors(vk);
     double err(0);
     for (const auto &fe: facErr) {
@@ -299,6 +317,7 @@ output
     return (err);
   }
 
+/* 通过 optimized_ 找到GTSAM中对应的key */
   std::vector<OptimizerKey>
   Graph::getOptimizerKeys(const VertexVec &vv) const {
     std::vector<OptimizerKey> vk;
@@ -311,16 +330,27 @@ output
     return (vk);
   }
 
-/* 在所有 factors_ 里,找已经optimized的 factors_*/
+/* 
+func
+	在所有 factors_ 里,找到所有已经optimized的Factor_vertex(已经加入GTSAM)
+output
+	vv: optimized Factor_vertex
+  */
   VertexVec Graph::getOptimizedFactors() const {
     VertexVec vv;
     std::copy_if(
       getFactors().begin(), getFactors().end(), std::back_inserter(vv),
-      [this](VertexDesc v) {
+      [this](VertexDesc v) {//获得调用此函数的输入变量 v
         return (optimized_.find(v) != optimized_.end()); });
     return (vv);
   }
 
+/*
+1.index by keys, find the error in kem
+2.sum
+output
+	errSum
+*/
   static double error_sum(const KeyToErrorMap &kem,
                           const std::vector<OptimizerKey> &keys) {
     double errSum(0);
@@ -333,9 +363,15 @@ output
     return (errSum);
   }
 
+/* 
+func:
+	all optimized Factor_vertex, calculate their error(in GTSAM) 
+output
+	errMap
+*/
   Graph::ErrorToVertexMap Graph::getErrorMap() const {
     ErrorToVertexMap errMap;
-    const auto vv = getOptimizedFactors();/* 在所有 factors_ 里,找已经optimized的 factors_ */
+    const auto vv = getOptimizedFactors();/* in all factors_, find all the optimized Factor_vertex */
     const auto vk = getOptimizerKeys(vv);/* 找 factors_ 对应的key */
     const auto facErr = optimizer_->getErrors(vk);/* 通过key,索引gtsam::ExpressionFactorGraph */
     for (const auto v: vv) {
@@ -348,6 +384,7 @@ output
     return (errMap);
   }
 
+/* print errMap(error of each optimized factor_vertex) */
   void Graph::printErrorMap(const string &prefix) const {
     auto errMap = getErrorMap();
     for (const auto &v: errMap) {
@@ -356,6 +393,7 @@ output
     }
   }
 
+/* all the factor_vertex, sort by time */
   Graph::TimeToErrorMap Graph::getTimeToErrorMap() const {
     TimeToErrorMap m;
     const auto vv = getOptimizedFactors();
@@ -367,7 +405,7 @@ output
         const VertexConstPtr vp = graph_[v];
         const FactorConstPtr fp =
           std::dynamic_pointer_cast<const factor::Factor>(vp);
-        if (!fp) {
+        if (!fp) {//not Factor_vertex
           BOMB_OUT("vertex is no factor: " << *vp);
         }
         const double err = error_sum(facErr, it->second);

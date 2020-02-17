@@ -1,4 +1,4 @@
-/* -*-c++-*--------------------------------------------------------------------
+﻿/* -*-c++-*--------------------------------------------------------------------
  * 2018 Bernd Pfrommer bernd.pfrommer@gmail.com
  */
 
@@ -16,6 +16,7 @@ namespace tagslam {
     
 #define FMT(X, Y) std::fixed << std::setw(X) << std::setprecision(Y)
 
+/* write down 每个coordinate factor的情况 */
     void Coordinate::writeDiagnostics() {
       std::ofstream f("coordinate_diagnostics.txt");
       for (const auto &v: vertexes_) {

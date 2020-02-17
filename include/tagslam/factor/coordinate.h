@@ -1,4 +1,4 @@
-/* -*-c++-*--------------------------------------------------------------------
+﻿/* -*-c++-*--------------------------------------------------------------------
  * 2019 Bernd Pfrommer bernd.pfrommer@gmail.com
  */
 
@@ -61,7 +61,7 @@ namespace tagslam {
       static CoordinateFactorPtr parse(const string &name,
                                        XmlRpc::XmlRpcValue meas,
                                        TagFactory *factory);
-      double          length_;
+      double          length_;//测量值
       double          noise_;
       Eigen::Vector3d direction_;
       int             corner_;

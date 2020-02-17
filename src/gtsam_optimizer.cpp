@@ -1,4 +1,4 @@
-/* -*-c++-*--------------------------------------------------------------------
+﻿/* -*-c++-*--------------------------------------------------------------------
  * 2018 Bernd Pfrommer bernd.pfrommer@gmail.com
  */
 
@@ -514,6 +514,8 @@ output:
   }
 
 /* 
+func
+	get each factory error for vector<FactorKey>
 input:
 	keys: FactorKey可以索引对应的factor
 output:
@@ -542,8 +544,8 @@ output:
     }
     for (const auto &k: keys) {
       try {
-        const auto i = g->at(k);
-        double err = i->error(*values);
+        const auto i = g->at(k);//a specific factor can be index by factor key
+        double err = i->error(*values);//error for a specific factor
         ke.insert(KeyToErrorMap::value_type(k, err));
       } catch (const gtsam::ValuesKeyDoesNotExist &e) {
         ROS_WARN_STREAM("cannot get error for key: " << k);
