@@ -59,7 +59,7 @@ namespace tagslam {
                             const SubGraph::FactorCollection &covered);
     double optimize(Graph *g, double thresh);
     // ------ variables --------------
-    TimeToVertexesMap  oldFactors_;
+    TimeToVertexesMap  oldFactors_;//<ros::Time, VertexVec>
     Profiler           profiler_;
     int                numIncrementalOpt_{0};
     double             subgraphError_{0};

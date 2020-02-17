@@ -32,7 +32,6 @@ namespace tagslam {
   }
 
 /*
-假设factor也是vertex：
 转换成factor基类
 Distance/Coordinate这两种factor都不能establish a pose
 
@@ -117,7 +116,7 @@ output:
         ff.push_back(fac);
         newSubGraph->factors.push_back(fac);
       }
-      for (const auto vv: values) {
+      for (const auto vv: values) {//Value_vertex
         newSubGraph->values.insert(vv);
         //ROS_INFO_STREAM("  adding new corresponding values: " << info(vv));
         covered->values.insert(vv);
@@ -254,7 +253,7 @@ output
     int idx = find_connected_poses(*g, v, &T);
     Transform tf;
     switch (idx) {
-    case 0: { // T_r_c = T_r_w * T_w_b * T_b_o * T_o_c
+    case 0: { // T_r_c = T_r_w * T_w_b * T_b_o * T_o_c//T_rig_cam = T_rig_world * T_world_body * T_body_object * T_object_cam
       tf =  g->pose(T[1]).inverse() * g->pose(T[2]) *
         g->pose(T[3]) * T_c_o.inverse();
       g->getPoseVertex(T[idx])->addToOptimizer(tf, g);
@@ -364,6 +363,13 @@ output
     return (false);
   }
 
+/*
+func
+	1.trans to RelativePosePrior
+	2.
+	3.
+	4.
+*/
   static bool init_from_rel_pose_prior(Graph *g, const VertexDesc &v) {
     RelativePosePriorFactorPtr rp =
       std::dynamic_pointer_cast<factor::RelativePosePrior>((*g)[v]);

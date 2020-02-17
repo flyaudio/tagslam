@@ -393,7 +393,7 @@ output
     }
   }
 
-/* all the factor_vertex, sort by time */
+/* all the factor_vertex, sorted by time */
   Graph::TimeToErrorMap Graph::getTimeToErrorMap() const {
     TimeToErrorMap m;
     const auto vv = getOptimizedFactors();
@@ -419,6 +419,10 @@ output
     return (m);
   }
 
+/*
+index by vertex(Value_vertex),get pose key in gtsam
+index by key,get pose noise matrix from GTSAM
+*/
   PoseNoise Graph::getPoseNoise(const VertexDesc &v) const {
     const ValueKey k = findOptimizedPoseKey(v);
     return (PoseNoise(optimizer_->getMarginal(k)));
